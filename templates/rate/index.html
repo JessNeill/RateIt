@@ -1,0 +1,33 @@
+{% extends 'rate/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Homepage
+{% endblock %}
+
+{% block body_block %}
+<h1>RateIt!</h1>
+    <div>
+        <h2>Most Popular Movies</h2>
+        <figure>
+            <img src="{% static 'images/jaws.jpg' %}" alt="jaws poster" width="150" height="200"/>
+            <figcaption>Jaws</figcaption>
+            <img src="{% static 'images/pulp_fiction.jpg' %}" alt="pulp fiction poster" width="150" height="200"/>
+            <figcaption>Pulp Fiction</figcaption>
+        </figure>
+        <figure>
+            <img src="{% static 'images/justice_league.jpg' %}" alt="justice league poster" width="150" height="200"/>
+            <figcaption>The Jusitce League</figcaption>
+        </figure>
+            
+            
+    </div>
+
+    <div>
+        <h2>Most Popular Books</h2>
+        <img src="{% static 'images/the_hobbit.jpg' %}" alt="the hobbit cover" width="150" height="200"/>
+        <img src="{% static 'images/circe.jpg' %}" alt="circe cover" width="150" height="200"/>
+        <img src="{% static 'images/great_gatsby.jpg' %}" alt="great gatsby cover" width="150" height="200"/>
+    </div>
+{% endblock %}
+
