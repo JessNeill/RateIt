@@ -7,11 +7,11 @@
         <title>RateIt</title>
     </head>
     <div class="topnav">
-        <a class="active" href="index.html">Home</a>
-        <a href="genres.html">Genres</a>
-        <a href="add_rating.html">Add Rating</a>
-        <a href="my_media.html">My Books and Movies</a>
-        <a href="login.html">Login</a>
+        <a class="active" href="{% url 'rate:index' %}">Home</a>
+        <a href="{% url 'rate:genres' %}">Genres</a>
+        <a href="{% url 'rate:add_rating' %}">Add Rating</a>
+        <a href="{% url 'rate:my_media' %}">My Books and Movies</a>
+        <a href="{% url 'rate:login' %}">Login</a>
     </div>
     <body>
         {% block body_block %}
