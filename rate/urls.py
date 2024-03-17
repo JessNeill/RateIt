@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, reverse_lazy
 from rate import views
 from django.contrib.auth import views as auth_views
 
@@ -13,6 +13,6 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('restricted/', views.restricted, name='restricted'),
     path('logout/', views.user_logout, name='logout'),
-    path('password_change/', auth_views.PasswordChangeView.as_view(), name='auth_password_change'),
+    path('password_change/', auth_views.PasswordChangeView.as_view(success_url=reverse_lazy('rate:index')), name='auth_password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
 ]
