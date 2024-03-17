@@ -1,35 +1,28 @@
-<!-- /RateIt/templates/rate/create_account.html -->
-
-{% extends "rate/base.html" %}
+{% extends 'rate/base.html' %}
+{% block title_block %}
+Register
+{% endblock %}
 
 {% block body_block %}
-<div class="signup-container">
-    <h1>Create Account</h1>
-    <form method="post" action="{% url 'rate:register' %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required>
-        </div>
-
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" required>
-        </div>
-
-        <div class="form-group">
-            <label for="password1">Password:</label>
-            <input type="password" name="password1" id="password1" required>
-        </div>
-
-        <div class="form-group">
-            <label for="password2">Confirm Password:</label>
-            <input type="password" name="password2" id="password2" required>
-        </div>
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Create Account</button>
-        </div>
-    </form>
-</div>
+<h2>Register</h2>
+<form method="post">
+    {% csrf_token %}
+    {% for field in user_form %}
+        <p>
+            {{ field.errors }}
+            {{ field.label_tag }}<br>
+            {{ field }}
+            {% if field.name == "username" %}
+                <br><small>Please enter your email account as your username and ensure its format is correct.</small>
+            {% endif %}
+        </p>
+    {% endfor %}
+    {{ profile_form.as_p }}
+    <input type="submit" value="Register">
+</form>
+{% if registered %}
+<p>Thank you for registering!</p>
+{% else %}
+<p>Register to rate your favorite books and movies!</p>
+{% endif %}
 {% endblock %}
