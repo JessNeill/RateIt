@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.urls import reverse
 from .forms import UserForm, UserProfileForm
 from django.contrib.auth import get_user_model
+from rate.models import Movie, Movie_Rating, Book, Book_Rating
 
 def index(request):
     return render(request, 'rate/index.html')
@@ -19,7 +20,32 @@ def add_rating(request):
     return render(request, 'rate/add_rating.html')
 
 def my_media(request):
-    return render(request, 'rate/my_media.html')
+    context_dict={}
+    my_br_list = Book_Rating.objects.filter(user_id=request.user.user_id).values()
+    context_dict['my_books']=my_br_list
+ 
+    for br in my_br_list:
+        title = Book.objects.filter(book_id=br.book_id).book_title
+        genre = Book.objects.filter(book_id=br.book_id).genre
+        image = Book.objects.filter(book_id=br.book_id).image
+        br['title']=title
+        br['genre']=genre
+        br['image']=image
+       
+    my_mr_list = Movie_Rating.objects.filter(user_id=request.user.user_id).values() ##it might be request.user.user_id but hopefully this is the right code for getting the current user id (request.user.id) the tutor wasnt all that confident
+    context_dict['my_movies'] = my_mr_list
+   
+    for mr in my_mr_list:
+        title = Movie.objects.filter(movie_id=mr.movie_id).title
+        genre = Movie.objects.filter(movie_id=mr.movie_id).genre
+        image = Movie.objects.filter(movie_id=mr.movie_id).image
+        mr['title']=title
+        mr['genre']=genre
+        mr['image']=image
+   
+    ##context_dict={'my_movies':{'movie_rating':6,'movie_id':2, 'user_id':4, 'rating': 6, 'comment': 'nice', 'title':"Oppenhimer", 'genre':"comedy", 'image':"eognoirad"},{...},{...}...}
+  
+    return render(request, 'rate/my_media.html', context=context_dict)
 
 def user_login(request):
     if request.method == 'POST':

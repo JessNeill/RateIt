@@ -1,0 +1,34 @@
+{% extends "rate/base.html" %}
+{% load staticfiles %}
+ 
+{% block title_block %}
+    My Books and Movies
+{% endblock %}
+ 
+{% block body_block %}
+<h1>My Books and Movies</h1>
+    <!--display all movies rated: -->
+    {%if my_movies %} <!--if a movie has been rated by the user -->
+        <h2> My Movies</h2>
+   
+        {% for movie in my_movies %}
+            <h3>{{ movie.title }}</h3>
+            Genre: {{ movie.genre }}</br>
+            Review: {{ movie.comment }}</br>
+            Image: {{ movie.image }}</br>
+            Rating: {{ movie.rating }}</br>
+        {% endfor %}
+    {% endif %}
+    {% if my_books %}
+        <h2> My Books</h2>
+       
+        {% for book in my_books %}
+            <h3>{{ book.title }}</h3>
+            Genre: {{ book.genre }}</br>
+            Review: {{ book.comment }}</br>
+            Image: {{ book.image }}</br>
+            Rating: {{ book.rating }}</br>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+ 
