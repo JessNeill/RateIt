@@ -72,6 +72,9 @@ class Movie_Rating(models.Model):
     rating = models.IntegerField(max_length = 1)
     comment = models.CharField(max_length = 300)
 
+    class Meta:
+        verbose_name_plural = 'Movie Ratings'
+        
     def __str__(self):
         return self.title
     
@@ -82,11 +85,17 @@ class Book_Rating(models.Model):
     rating = models.IntegerField(max_length = 1)
     comment = models.CharField(max_length = 300)
 
+    class Meta:
+        verbose_name_plural = 'Book Ratings'
+
     def __str__(self):
         return self.title
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+
+    class Meta:
+        verbose_name_plural = 'User Profiles'
 
     def __str__(self):
         return self.user.username
