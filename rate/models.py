@@ -50,7 +50,7 @@ class Movie(models.Model):
     picture = models.ImageField(upload_to='images', blank = True)
 
     def __str__(self):
-        return self.name
+        return self.title
 
 class Book(models.Model):
     book_id = models.IntegerField(unique = True)
@@ -59,7 +59,7 @@ class Book(models.Model):
     picture = models.ImageField(upload_to='images', blank = True)
 
     def __str__(self):
-        return self.name
+        return self.title
     
 class Movie_Rating(models.Model):
     movie_rating_id = models.IntegerField(unique = True)
@@ -69,17 +69,17 @@ class Movie_Rating(models.Model):
     comment = models.CharField(max_length = 300)
 
     def __str__(self):
-        return self.name
+        return self.title
     
 class Book_Rating(models.Model):
     book_rating_id = models.IntegerField(unique = True)
-    book_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(max_length = 1)
     comment = models.CharField(max_length = 300)
 
     def __str__(self):
-        return self.name
+        return self.title
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
