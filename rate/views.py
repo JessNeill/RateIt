@@ -63,6 +63,7 @@ def user_login(request):
     else:
         return render(request, 'rate/login.html')
 
+#is this supposed to be here??
 User = get_user_model()
 
 def register(request):
@@ -70,8 +71,10 @@ def register(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
         profile_form = UserProfileForm(request.POST)
+
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save(commit=False)
+
             user.set_password(user_form.cleaned_data['password'])
             user.save()
 

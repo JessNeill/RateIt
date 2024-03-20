@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class MyUserManager(BaseUserManager):
@@ -59,27 +58,27 @@ class Book(models.Model):
     picture = models.ImageField(upload_to='images', blank = True)
 
     def __str__(self):
-        return self.title
+        return self.book_title
     
 class Movie_Rating(models.Model):
     movie_rating_id = models.IntegerField(unique = True)
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(max_length = 1)
     comment = models.CharField(max_length = 300)
 
     def __str__(self):
-        return self.title
+        return self.movie_rating_id
     
 class Book_Rating(models.Model):
     book_rating_id = models.IntegerField(unique = True)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(max_length = 1)
     comment = models.CharField(max_length = 300)
 
     def __str__(self):
-        return self.title
+        return self.book_rating_id
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
