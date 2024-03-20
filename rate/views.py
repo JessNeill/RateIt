@@ -83,7 +83,7 @@ def register(request):
             profile.save()
 
             registered = True
-            return redirect('rate:login')  # Or any other success URL
+            return redirect('rate:login')
         else:
             print(user_form.errors, profile_form.errors)
     else:
