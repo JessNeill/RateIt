@@ -63,7 +63,7 @@ class Book(models.Model):
     picture = models.ImageField(upload_to='images', blank = True)
 
     def __str__(self):
-        return self.title
+        return self.book_title
     
 class Movie_Rating(models.Model):
     movie_rating_id = models.IntegerField(unique = True)
@@ -76,7 +76,7 @@ class Movie_Rating(models.Model):
         verbose_name_plural = 'Movie Ratings'
         
     def __str__(self):
-        return self.title
+        return str(self.movie_rating_id)
     
 class Book_Rating(models.Model):
     book_rating_id = models.IntegerField(unique = True)
@@ -89,7 +89,7 @@ class Book_Rating(models.Model):
         verbose_name_plural = 'Book Ratings'
 
     def __str__(self):
-        return self.title
+        return str(self.book_rating_id)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
