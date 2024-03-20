@@ -5,7 +5,7 @@ from .models import Movie, Book
 from .models import Movie_Rating, Book_Rating
 
 
-#admin.site.register(User)
+admin.site.register(User)
 admin.site.register(UserProfile)
 
 admin.site.register(Movie)
