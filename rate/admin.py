@@ -1,5 +1,5 @@
 from django.contrib import admin
-#from .models import User,
+from .models import User
 from .models import UserProfile
 from .models import Movie, Book
 from .models import Movie_Rating, Book_Rating
