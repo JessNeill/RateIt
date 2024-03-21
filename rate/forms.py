@@ -30,3 +30,4 @@ class BookRatingForm(forms.ModelForm):
     class Meta:
         model = Book_Rating
         fields = ['book_id', 'rating', 'comment', 'image']
+
