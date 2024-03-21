@@ -1,20 +1,39 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import logout
 from django.urls import reverse
 from .forms import UserForm, UserProfileForm
 from django.contrib.auth import get_user_model
-from rate.models import Movie, Movie_Rating, Book, Book_Rating
+from rate.models import Movie, Book, Movie_Rating, Book_Rating
 
 def index(request):
     return render(request, 'rate/index.html')
 
 def genres(request):
-    return render(request, 'rate/genres.html')
+    movies = Movie.objects.all().order_by('genre')
+    books = Book.objects.all().order_by('genre')
+
+    genre_data = {
+        'movies': [],
+        'books' : []
+    }
+
+    for movie in movies:
+        ratings = Movie_Rating.objects.filter(movie_id=movie.id)
+        genre_data['movies'].append({
+            'title' : Movie.title, 
+            'rating': [{'rating': rating.rating} for rating in ratings]})
+
+    for book in books:
+        ratings = Book_Rating.objects.filter(book_id=book.id)
+        genre_data['books'].append({
+            'title': Book.title, 
+            'ratings': [{'rating': rating.rating} for rating in ratings]})
+    
+    return render(request, 'rate/genres.html', {'genre_data' : genre_data})
 
 def add_rating(request):
     return render(request, 'rate/add_rating.html')
@@ -95,9 +114,11 @@ def register(request):
         'registered': registered
     })
 
+@login_required
 def restricted(request):
     return render(request, 'rate/restricted.html')
 
+@login_required
 def user_logout(request):
     logout(request)
     return redirect(reverse('rate:index'))
