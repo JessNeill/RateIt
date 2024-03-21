@@ -70,7 +70,7 @@ class Movie_Rating(models.Model):
     #user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    rating = models.IntegerField(max_length = 1)
+    rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
 
     class Meta:
