@@ -56,18 +56,17 @@ class Movie(models.Model):
 
 class Book(models.Model):
     book_id = models.IntegerField(unique = True)
-    title = models.CharField(max_length = 100)
+    book_title = models.CharField(max_length = 100)
     genre = models.CharField(max_length = 50)
     picture = models.ImageField(upload_to='images', blank = True)
 
     def __str__(self):
-        return self.title
+        return self.book_title
     
 class Movie_Rating(models.Model):
-    #User = get_user_model()
     movie_rating_id = models.IntegerField(unique = True)
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
@@ -76,10 +75,8 @@ class Movie_Rating(models.Model):
         return str(self.movie_rating_id)
     
 class Book_Rating(models.Model):
-    #User = get_user_model()
     book_rating_id = models.IntegerField(unique = True)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
-    #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
