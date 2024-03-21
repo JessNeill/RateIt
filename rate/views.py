@@ -1,13 +1,12 @@
-from django.shortcuts import render
 from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect, render
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import logout
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+
 from .forms import UserForm, UserProfileForm
-from django.contrib.auth import get_user_model
 from rate.models import Movie, Movie_Rating, Book, Book_Rating
 
 def index(request):
@@ -16,9 +15,11 @@ def index(request):
 def genres(request):
     return render(request, 'rate/genres.html')
 
+@login_required
 def add_rating(request):
     return render(request, 'rate/add_rating.html')
 
+@login_required
 def my_media(request):
     context_dict={}
     my_br_list = Book_Rating.objects.filter(user_id=request.user.user_id).values()
@@ -98,6 +99,7 @@ def register(request):
 def restricted(request):
     return render(request, 'rate/restricted.html')
 
+@login_required
 def user_logout(request):
     logout(request)
     return redirect(reverse('rate:index'))
