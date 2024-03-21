@@ -44,8 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
-
-    
+      
 class Movie(models.Model):
     movie_id = models.IntegerField(unique = True)
     title = models.CharField(max_length = 100)
@@ -57,12 +56,12 @@ class Movie(models.Model):
 
 class Book(models.Model):
     book_id = models.IntegerField(unique = True)
-    book_title = models.CharField(max_length = 100)
+    title = models.CharField(max_length = 100)
     genre = models.CharField(max_length = 50)
     picture = models.ImageField(upload_to='images', blank = True)
 
     def __str__(self):
-        return self.book_title
+        return self.title
     
 class Movie_Rating(models.Model):
     #User = get_user_model()
@@ -70,8 +69,12 @@ class Movie_Rating(models.Model):
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
     #user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+<<<<<<< HEAD
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(max_length = 1)
+=======
+    rating = models.IntegerField()
+>>>>>>> a11c7415574db876c20b0c68149d2760c7b8cd6f
     comment = models.CharField(max_length = 300)
 
     class Meta:
@@ -85,8 +88,12 @@ class Book_Rating(models.Model):
     book_rating_id = models.IntegerField(unique = True)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
     #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+<<<<<<< HEAD
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     rating = models.IntegerField(max_length = 1)
+=======
+    rating = models.IntegerField()
+>>>>>>> a11c7415574db876c20b0c68149d2760c7b8cd6f
     comment = models.CharField(max_length = 300)
 
     class Meta:
