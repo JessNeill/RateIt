@@ -8,65 +8,37 @@
 {% block body_block %}
 <h1>Genres</h1>
 
-{% for movie in movies %}
-    {% if movie.genre == 'Crime' %}
-        <h2>Crime Movie</h2>
-        <h3>{{ movie.title }}</h3>
-        <h4>Rating:</h4>
-        <ul>
-            {% for rating in movie_ratings %}
-                {% if movie_ratings.movie_id == movie.id %}
-                    <li>{{ movie_ratings.rating }}</li>
-                {% endif %}
-            {% empty %}
-                <li>No ratings available</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {% if movie.genre == 'Thriller' %}
-        <h2>Thriller Movie</h2>
-        <h3>{{ movie.title }}</h3>
-        <h4>Rating:</h4>
-        <ul>
-            {% for rating in movie_ratings %}
-                {% if movie_ratings.movie_id == movie.id %}
-                    <li>{{ movie_ratings.rating }}</li>
-                {% endif %}
-            {% empty %}
-                <li>No ratings available</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endfor %}
+    {% for movie in movies %}
+        {% if movie.genre == 'Crime' %}
+            <h2>Crime Movie</h2>
+            <h4>{{ movie.title }}</h4>
+            <ul>
+                <h6>Rating:{{ movie_rating.rating }}</h6>
+            </ul>
+        {% endif %}
+        {% if movie.genre == 'Thriller' %}
+            <h2>Thriller Movie</h2>
+            <h4>{{ movie.title }}</h4>
+            <ul>
+                <h6>Rating:{{ movie_rating.rating }}</h6>
+            </ul>
+        {% endif %}
+    {% endfor %}
 
-{% for book in books %}
-    {% if book.genre == 'Tragedy' %}
-        <h2>Tragedy Book</h2>
-        <h3>{{ book.title }}</h3>
-        <h4>Rating:</h4>
-        <ul>
-            {% for rating in book_ratings %}
-                {% if movie_ratings.movie_id == movie.id %}
-                    <li>{{ movie_ratings.rating }}</li>
-                {% endif %}
-            {% empty %}
-                <li>No ratings available</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {% if book.genre == 'Fantasy' %}
-        <h2>Fantasy Book</h2>
-        <h3>{{ book.title }}</h3>
-        <h4>Rating:</h4>
-        <ul>
-            {% for rating in book_ratings %}
-                {% if movie_ratings.movie_id == movie.id %}
-                    <li>{{ movie_ratings.rating }}</li>
-                {% endif %}
-            {% empty %}
-                <li>No ratings available</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endfor %}
+    {% for book in books %}
+        {% if book.genre == 'Tragedy' %}
+            <h2>Tragedy Book</h2>
+            <h4>{{ book.title }}</h4>
+            <ul>
+                <h6>Rating:{{ book_rating.rating }}</h6>
+            </ul>
+        {% endif %}
+        {% if book.genre == 'Fantasy' %}
+            <h2>Fantasy Book</h2>
+            <h3>{{ book.title }}</h3>
+            <ul>
+                <h6>Rating:{{ book_rating.rating }}</h6>
+            </ul>
+        {% endif %}
+    {% endfor %}
 {% endblock %}
