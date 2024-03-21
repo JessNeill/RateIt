@@ -7,18 +7,78 @@ Add Rating
 
 {% block body_block %}
 <h1>Add Rating</h1>
-<div>
-    <form id="rating_form" method="post" action="{% url 'rate:add_rating' %}">
-        {% csrf_token %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form.visible_fields %}
-                {{ field.errors }}
-                {{ field.help_text }}
-                {{ field }}
-        {% endfor %}
-        <input type="submit" name="submit" value="Submit Rating" />
-    </form>
-</div>
-{% endblock %}  
+<form id="rating-form" method="post" action="{% url 'rate:add_rating' %}" enctype="multipart/form/data">
+    {% csrf_token %}
+
+    <div class="fieldWrapper">
+        <label for="media-type-selector">Type:</label>
+        <select id="media-type-selector" name="media_type" onchange="updateFormFields()">
+            <option value="">--Please choose an option--</option>
+            <option value="movie">Movie</option>
+            <option value="book">Book</option>
+        </select>
+    </div>
+
+    <div class="fieldWrapper">
+        <label for="id_title">Title:</label>
+        <input type="text" id="id_title" name="title" maxlength="200" required />
+        <div class="errorlist"></div>
+    </div>
+
+    <div id="dynamic-fields">
+    </div>
+
+    <input type="submit" value="Submit Rating">
+</form>
+
+<script>
+function updateFormFields() {
+    const mediaType = document.getElementById('media-type-selector').value;
+    const dynamicFields = document.getElementById('dynamic-fields');
+    const errorList = dynamicFields.getElementsByClassName('errorlist')[0];
+
+    if (mediaType === 'movie') {
+        dynamicFields.innerHTML = `
+            <div class="fieldWrapper">
+                <label for="id_rating">Rating:</label>
+                <input type="number" id="id_rating" name="rating" required />
+                <div class="errorlist"></div>
+            </div>
+            <div class="fieldWrapper">
+                <label for="id_comment">Comment:</label>
+                <textarea id="id_comment" name="comment"></textarea>
+                <div class="errorlist"></div>
+            </div>
+            <div class="fieldWrapper">
+                <label for="id_image">Image:</label>
+                <input type="file" id="id_image" name="image" />
+                <div class="errorlist"></div>
+            </div>
+        `;
+    } else if (mediaType === 'book') {
+        dynamicFields.innerHTML = `
+            <!-- Similar structure for book fields, change name attributes if needed -->
+            <div class="fieldWrapper">
+                <label for="id_rating">Rating:</label>
+                <input type="number" id="id_rating" name="rating" required />
+                <div class="errorlist"></div>
+            </div>
+            <div class="fieldWrapper">
+                <label for="id_comment">Comment:</label>
+                <textarea id="id_comment" name="comment"></textarea>
+                <div class="errorlist"></div>
+            </div>
+            <div class="fieldWrapper">
+                <label for="id_image">Image:</label>
+                <input type="file" id="id_image" name="image" />
+                <div class="errorlist"></div>
+            </div>
+        `;
+    } else {
+        dynamicFields.innerHTML = '';
+    }
+}
+document.addEventListener('DOMContentLoaded', updateFormFields);
+</script>
+
+{% endblock %}
