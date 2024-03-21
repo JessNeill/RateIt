@@ -67,9 +67,14 @@ class Movie_Rating(models.Model):
     #User = get_user_model()
     movie_rating_id = models.IntegerField(unique = True)
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    #username = models.ForeignKey(Movie, to_field='user_name', on_delete=models.CASCADE)
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+<<<<<<< HEAD
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(max_length = 1)
+=======
     rating = models.IntegerField()
+>>>>>>> a11c7415574db876c20b0c68149d2760c7b8cd6f
     comment = models.CharField(max_length = 300)
 
     class Meta:
@@ -83,7 +88,12 @@ class Book_Rating(models.Model):
     book_rating_id = models.IntegerField(unique = True)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
     #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+<<<<<<< HEAD
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    rating = models.IntegerField(max_length = 1)
+=======
     rating = models.IntegerField()
+>>>>>>> a11c7415574db876c20b0c68149d2760c7b8cd6f
     comment = models.CharField(max_length = 300)
 
     class Meta:
