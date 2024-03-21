@@ -128,9 +128,3 @@ def restricted(request):
 def user_logout(request):
     logout(request)
     return redirect(reverse('rate:index'))
-
-
-def user_logout(request):
-    logout(request)
-    return redirect(reverse('rate:index'))
-
