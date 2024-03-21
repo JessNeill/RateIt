@@ -69,10 +69,8 @@ class Movie_Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
 
-    class Meta:
-        verbose_name_plural = 'Movie Ratings'
-        
     def __str__(self):
         return str(self.movie_rating_id)
     
@@ -82,6 +80,10 @@ class Book_Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Book Ratings'
 
     class Meta:
         verbose_name_plural = 'Book Ratings'
