@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from .forms import UserForm, UserProfileForm
 from django.contrib.auth import get_user_model
 from rate.models import Movie, Book, Movie_Rating, Book_Rating
@@ -35,9 +37,11 @@ def genres(request):
     
     return render(request, 'rate/genres.html', {'genre_data' : genre_data})
 
+@login_required
 def add_rating(request):
     return render(request, 'rate/add_rating.html')
 
+@login_required
 def my_media(request):
     context_dict={}
     my_br_list = Book_Rating.objects.filter(user_id=request.user.user_id).values()
