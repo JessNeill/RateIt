@@ -15,27 +15,10 @@ def index(request):
     return render(request, 'rate/index.html')
 
 def genres(request):
-    movies = Movie.objects.all().order_by('genre')
-    books = Book.objects.all().order_by('genre')
-
-    genre_data = {
-        'movies': [],
-        'books' : []
-    }
-
-    for movie in movies:
-        ratings = Movie_Rating.objects.filter(movie_id=movie.id)
-        genre_data['movies'].append({
-            'title' : Movie.title, 
-            'rating': [{'rating': rating.rating} for rating in ratings]})
-
-    for book in books:
-        ratings = Book_Rating.objects.filter(book_id=book.id)
-        genre_data['books'].append({
-            'title': Book.title, 
-            'ratings': [{'rating': rating.rating} for rating in ratings]})
+    movies = Movie.objects.all()
+    books = Book.objects.all()
     
-    return render(request, 'rate/genres.html', {'genre_data' : genre_data})
+    return render(request, 'rate/genres.html', {'movies': movies, 'books': books})
 
 @login_required
 def add_rating(request):
