@@ -7,8 +7,8 @@ from rate.models import Movie, Movie_Rating, Book, Book_Rating, User
 def populate():
     movies=[{'movie_id':1,'title':'Pulp Fiction','genre':'Crime', 'image':'/Users/jessneill/Workspace/RateIt/static/images/pulp_fiction.jpg'},
             {'movie_id':2,'title': 'Jaws' ,'genre':'Thriller', 'image':'/Users/jessneill/Workspace/RateIt/static/images/jaws.jpg'}]
-    books=[{'book_id':1, 'title':'The Great Gatsby', 'genre':'Tragady', 'image':'/Users/jessneill/Workspace/RateIt/static/images/great_gatsby.jpg'},
-           {'book_id':2, 'title':'Circe', 'genre':'Fantasy', 'image':'/Users/jessneill/Workspace/RateIt/static/images/circle.jpg'}]
+    books=[{'book_id':3, 'title':'The Great Gatsby', 'genre':'Tragady', 'image':'/Users/jessneill/Workspace/RateIt/static/images/great_gatsby.jpg'},
+           {'book_id':4, 'title':'Circe', 'genre':'Fantasy', 'image':'/Users/jessneill/Workspace/RateIt/static/images/circle.jpg'}]
     movie_rating=[{'movie_rating_id':5,'movie_id':1,'user_id':1, 'rating':9, 'comment':'Loved it, found it really intresting'},
                   {'movie_rating_id':6,'movie_id':2,'user_id':4, 'rating':6, 'comment':'Its a good movie but not for me, i found it too scary to be enjoyable'}]
     book_rating=[{'book_rating_id':5,'book_id':1,'user_id':2, 'rating':9, 'comment':'Really good book, found it an intresting read'},
