@@ -22,7 +22,7 @@ def add_rating(request):
 @login_required
 def my_media(request):
     context_dict={}
-    my_br_list = Book_Rating.objects.filter(user_id=request.user.user_id).values()
+    my_br_list = Book_Rating.objects.filter(user=request.user.user_id).values()
     context_dict['my_books']=my_br_list
  
     for br in my_br_list:
@@ -33,7 +33,7 @@ def my_media(request):
         br['genre']=genre
         br['image']=image
        
-    my_mr_list = Movie_Rating.objects.filter(user_id=request.user.user_id).values() ##it might be request.user.user_id but hopefully this is the right code for getting the current user id (request.user.id) the tutor wasnt all that confident
+    my_mr_list = Movie_Rating.objects.filter(user=request.user.user_id).values() ##it might be request.user.user_id but hopefully this is the right code for getting the current user id (request.user.id) the tutor wasnt all that confident
     context_dict['my_movies'] = my_mr_list
    
     for mr in my_mr_list:
