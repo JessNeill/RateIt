@@ -8,11 +8,11 @@ def populate():
     movies=[{'movie_id':1,'title':'Pulp Fiction','genre':'Crime', 'image':'/Users/jessneill/Workspace/RateIt/static/images/pulp_fiction.jpg'},
             {'movie_id':2,'title': 'Jaws' ,'genre':'Thriller', 'image':'/Users/jessneill/Workspace/RateIt/static/images/jaws.jpg'}]
     books=[{'book_id':1, 'title':'The Great Gatsby', 'genre':'Tragady', 'image':'/Users/jessneill/Workspace/RateIt/static/images/great_gatsby.jpg'},
-           {'book_id':2, 'title':'Circle', 'genre':'Fantasy', 'image':'/Users/jessneill/Workspace/RateIt/static/images/circle.jpg'}]
-    movie_rating=[{'movie_rating_id':3,'movie_id':1,'user_id':1, 'rating':9, 'comment':'Loved it, found it really intresting'},
-                  {'movie_rating_id':4,'movie_id':2,'user_id':4, 'rating':6, 'comment':'Its a good movie but not for me, i found it too scary to be enjoyable'}]
-    book_rating=[{'book_rating_id':3,'book_id':1,'user_id':2, 'rating':9, 'comment':'Really good book, found it an intresting read'},
-                 {'book_rating_id':4,'book_id':1,'user_id':3, 'rating':4, 'comment':'Overhyped'}]
+           {'book_id':2, 'title':'Circe', 'genre':'Fantasy', 'image':'/Users/jessneill/Workspace/RateIt/static/images/circle.jpg'}]
+    movie_rating=[{'movie_rating_id':5,'movie_id':1,'user_id':1, 'rating':9, 'comment':'Loved it, found it really intresting'},
+                  {'movie_rating_id':6,'movie_id':2,'user_id':4, 'rating':6, 'comment':'Its a good movie but not for me, i found it too scary to be enjoyable'}]
+    book_rating=[{'book_rating_id':5,'book_id':1,'user_id':2, 'rating':9, 'comment':'Really good book, found it an intresting read'},
+                 {'book_rating_id':6,'book_id':1,'user_id':3, 'rating':4, 'comment':'Overhyped'}]
     '''users=[{'user_id':1,'first_name':'Jess','last_name':'Neill','email':'hello@gmail.com','password':'supersecret'},
            {'user_id':2,'first_name':'Isla','last_name':'Lase','email':'goodbye@hotmail.com','password':'ubersecret'},
            {'user_id':3,'first_name':'Rosie','last_name':'Posie','email':'rosieposie@gmail.com','password':'nevertelling'}]
