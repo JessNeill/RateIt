@@ -1,24 +1,36 @@
-{% extends 'rate/base.html' %}
+{% extends "rate/base.html" %}
 {% load staticfiles %}
 
-{% block title_lock %}
-<ul>
-    {% if categories %}
-        {% for c in categories %}
-            {% if c == current_category %}
-            <li>
-                <strong>
-                    <a href="{% url 'rango:show_category' c.slug %}">{{ c.name }}</a>
-                </strong>
-            </li>
-            {% else %}
-            <li>
-                <a href="{% url 'rango:show_category' c.slug %}">{{ c.name }}</a>
-            </li>
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        <li><strong>There are no categories present.</strong></li>
+{% block title_block %}
+    Genres
+{% endblock %}
+
+{% block body_block %}
+<h1>Genres</h1>
+
+{% for movie in movies %}
+    {% if movie.genre == 'Crime' %}
+        <h2>Crime Movie</h2>
+        <h3>{{ movie.title }}</h3>
+        <h4> Rating: {{ movie.rating }}</h4>
     {% endif %}
-</ul>
+    {% if movie.genre == 'Thriller' %}
+        <h2>Thriller Movie</h2>
+        <h3>{{ movie.title }}</h3>
+        <h4> Rating: {{ movie.rating }}</h4>
+    {% endif %}
+{% endfor %}
+
+{% for book in books %}
+    {% if book.genre == 'Tragedy' %}
+        <h2>Tragedy Book</h2>
+        <h3>{{ book.title }}</h3>
+        <h4> Rating: {{ book.rating }}</h4>
+    {% endif %}
+    {% if book.genre == 'Fantasy' %}
+        <h2>Fantasy Book</h2>
+        <h3>{{ book.title }}</h3>
+        <h4> Rating: {{ book.rating }}</h4>
+    {% endif %}
+{% endfor %}
 {% endblock %}
