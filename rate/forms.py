@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from .models import UserProfile
+from rate.models import UserProfile, Movie_Rating, Book_Rating, Movie, Book
 
 User = get_user_model()
 
@@ -16,3 +16,17 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         exclude = ('user',)
+
+class MovieRatingForm(forms.ModelForm):
+    title = forms.CharField(max_length=200)
+
+    class Meta:
+        model = Movie_Rating
+        fields = ['movie_id', 'rating', 'comment', 'image']
+
+class BookRatingForm(forms.ModelForm):
+    title = forms.CharField(max_length=200)
+
+    class Meta:
+        model = Book_Rating
+        fields = ['book_id', 'rating', 'comment', 'image']

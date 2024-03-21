@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect 
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
@@ -6,9 +6,12 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.urls import reverse
-from .forms import UserForm, UserProfileForm
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from rate.forms import UserForm, UserProfileForm, MovieRatingForm, BookRatingForm
 from rate.models import Movie, Movie_Rating, Book, Book_Rating
+
 
 def index(request):
     return render(request, 'rate/index.html')
@@ -16,8 +19,35 @@ def index(request):
 def genres(request):
     return render(request, 'rate/genres.html')
 
+# @login_required
 def add_rating(request):
-    return render(request, 'rate/add_rating.html')
+    if request.method == 'POST':
+        form = MovieRatingForm(request.POST, request.FILES) if request.POST.get('media_type') == 'movie' else BookRatingForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            title = form.cleaned_data.get('title')
+            rating_instance = form.save(commit=False)
+            rating_instance.user = request.user
+
+            if request.POST.get('media_type') == 'movie':
+                movie, created = Movie.objects.get_or_create(title=title)
+                rating_instance.movie_id = movie
+            else:
+                book, created = Book.objects.get_or_create(title=title)
+                rating_instance.book_id = book
+
+            rating_instance.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        movie_form = MovieRatingForm()
+        book_form = BookRatingForm()
+        return render(request, 'rate/add_rating.html', {
+            'movie_form': movie_form,
+            'book_form': book_form
+        })
+
 
 def my_media(request):
     context_dict={}
@@ -80,7 +110,7 @@ def register(request):
             profile.save()
 
             registered = True
-            return redirect('rate:login')  # Or any other success URL
+            return redirect('rate:login')  
         else:
             print(user_form.errors, profile_form.errors)
     else:
@@ -94,6 +124,11 @@ def register(request):
 
 def restricted(request):
     return render(request, 'rate/restricted.html')
+
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('rate:index'))
+
 
 def user_logout(request):
     logout(request)
