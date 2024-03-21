@@ -17,8 +17,10 @@ def index(request):
 def genres(request):
     movies = Movie.objects.all()
     books = Book.objects.all()
+    movie_rating = Movie_Rating.objects.all()
+    book_rating = Book_Rating.objects.all()
     
-    return render(request, 'rate/genres.html', {'movies': movies, 'books': books})
+    return render(request, 'rate/genres.html', {'movies': movies, 'books': books, 'movie_rating': movie_rating, 'book_rating': book_rating})
 
 @login_required
 def add_rating(request):
