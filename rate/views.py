@@ -1,25 +1,34 @@
+
 from django.shortcuts import render, redirect 
 from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import logout
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from rate.forms import UserForm, UserProfileForm, MovieRatingForm, BookRatingForm
 from rate.models import Movie, Movie_Rating, Book, Book_Rating
-
+from django.contrib.auth.decorators import login_required
+from .forms import UserForm, UserProfileForm
+from django.contrib.auth import get_user_model
+from rate.models import Movie, Book, Movie_Rating, Book_Rating
 
 def index(request):
     return render(request, 'rate/index.html')
 
 def genres(request):
-    return render(request, 'rate/genres.html')
+    movies = Movie.objects.all()
+    books = Book.objects.all()
+    movie_rating = Movie_Rating.objects.all()
+    book_rating = Book_Rating.objects.all()
+    
+    return render(request, 'rate/genres.html', {'movies': movies, 'books': books, 'movie_rating': movie_rating, 'book_rating': book_rating})
 
-# @login_required
+@login_required
 def add_rating(request):
     if request.method == 'POST':
         form = MovieRatingForm(request.POST, request.FILES) if request.POST.get('media_type') == 'movie' else BookRatingForm(request.POST, request.FILES)
@@ -49,9 +58,10 @@ def add_rating(request):
         })
 
 
+@login_required
 def my_media(request):
     context_dict={}
-    my_br_list = Book_Rating.objects.filter(user_id=request.user.user_id).values()
+    my_br_list = Book_Rating.objects.filter(user=request.user.user_id).values()
     context_dict['my_books']=my_br_list
  
     for br in my_br_list:
@@ -62,7 +72,7 @@ def my_media(request):
         br['genre']=genre
         br['image']=image
        
-    my_mr_list = Movie_Rating.objects.filter(user_id=request.user.user_id).values() ##it might be request.user.user_id but hopefully this is the right code for getting the current user id (request.user.id) the tutor wasnt all that confident
+    my_mr_list = Movie_Rating.objects.filter(user=request.user.user_id).values() ##it might be request.user.user_id but hopefully this is the right code for getting the current user id (request.user.id) the tutor wasnt all that confident
     context_dict['my_movies'] = my_mr_list
    
     for mr in my_mr_list:
@@ -93,6 +103,7 @@ def user_login(request):
     else:
         return render(request, 'rate/login.html')
 
+#is this supposed to be here??
 User = get_user_model()
 
 def register(request):
@@ -100,8 +111,10 @@ def register(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
         profile_form = UserProfileForm(request.POST)
+
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save(commit=False)
+
             user.set_password(user_form.cleaned_data['password'])
             user.save()
 
@@ -110,6 +123,7 @@ def register(request):
             profile.save()
 
             registered = True
+            return redirect('rate:login')
             return redirect('rate:login')  
         else:
             print(user_form.errors, profile_form.errors)
@@ -122,9 +136,11 @@ def register(request):
         'registered': registered
     })
 
+@login_required
 def restricted(request):
     return render(request, 'rate/restricted.html')
 
+@login_required
 def user_logout(request):
     logout(request)
     return redirect(reverse('rate:index'))
