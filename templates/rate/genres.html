@@ -6,60 +6,45 @@
 {% endblock %}
 
 {% block body_block %}
-<style>
-    * {
-      box-sizing: border-box;
-    }
-    
-    .column {
-      float: left;
-      width: 225px;
-      padding: 5px;
-    }
-    
-    /* Clearfix (clear floats) */
-    .row::after {
-      content: "";
-      clear: both;
-      display: table;
-    }
-</style>
 <h1>Genres</h1>
-    {% for genre, movies_list in movies.items %}
-    {% if movies_list%}
-        <h2>{{genre}} Movies</h2>
-        <div class="row">
-            {% for movie in movies_list %}
-                <div class="column">
-                    <h4>{{ movie.title }}</h4>
-                    <h6>Rating: {{ movie.rating }}</h6>
-                    <figure>
-                        <img style="width: 100%" src="{{ movie.image }}"; this.src="'/media/{{ movie.image }}" alt="{{ movie.title }} poster" height="275"/>
-                    </figure>
+
+<div class="container">
+    <div class="row">
+        <!-- Movies Column -->
+        <div class="col-md-6">
+            <h2>Movies</h2>
+            {% for movie in movies %}
+                <div>
+                    <h4>{{ movie.genre }} - {{ movie.title }}</h4>
+                    {% if movie.picture %}
+                        <img src="{{ movie.picture.url }}" alt="{{ movie.title }}" />
+                    {% else %}
+                        <p>No image available.</p>
+                    {% endif %}
+                    <p>Average Rating: {{ movie.average_rating|floatformat:2 }}</p>
                 </div>
+            {% empty %}
+                <p>No movies to display.</p>
             {% endfor %}
         </div>
-    {% endif %}
-    {% endfor %}   
-
-    {% for genre, books_list in books.items %}
-    {% if books_list %}
         
-        <h2>{{ genre }} Books</h2>
-        <div class="row">
-            {% for book in books_list%}
-                <div class="column">
-                    <h4>{{ book.title }}</h4>
-                    <h6>Rating: {{ book.rating }}</h6>
-                    <figure>
-                        <img style="width: 100%" src="{{ book.image }}"; this.src="'/media/{{ book.image }}" alt="{{ book.title }} poster" height="275"/>
-                    </figure>
+        <!-- Books Column -->
+        <div class="col-md-6">
+            <h2>Books</h2>
+            {% for book in books %}
+                <div>
+                    <h4>{{ book.genre }} - {{ book.book_title }}</h4>
+                    {% if book.picture %}
+                        <img src="{{ book.picture.url }}" alt="{{ book.book_title }}" />
+                    {% else %}
+                        <p>No image available.</p>
+                    {% endif %}
+                    <p>Average Rating: {{ book.average_rating|floatformat:2 }}</p>
                 </div>
+            {% empty %}
+                <p>No books to display.</p>
             {% endfor %}
         </div>
-    {% endif %}
-    {% endfor %}
+    </div>
+</div>
 {% endblock %}
-
-{% endblock %}
-

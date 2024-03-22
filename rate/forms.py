@@ -19,15 +19,17 @@ class UserProfileForm(forms.ModelForm):
 
 class MovieRatingForm(forms.ModelForm):
     title = forms.CharField(max_length=200)
+    genre = forms.CharField(max_length=50)
 
     class Meta:
         model = Movie_Rating
-        fields = ['movie_id', 'rating', 'comment', 'image']
+        fields = ['title', 'genre','rating', 'comment', 'image']
 
 class BookRatingForm(forms.ModelForm):
-    title = forms.CharField(max_length=200)
+    book_title = forms.CharField(max_length=200)
+    genre = forms.CharField(max_length=50)
 
     class Meta:
         model = Book_Rating
-        fields = ['book_id', 'rating', 'comment', 'image']
+        fields = ['book_title', 'genre','rating', 'comment', 'image']
 

@@ -6,78 +6,72 @@ Add Rating
 {% endblock %}
 
 {% block body_block %}
-<h1>Add Rating</h1>
-<form id="rating-form" method="post" action="{% url 'rate:add_rating' %}" enctype="multipart/form/data">
+<div class="pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Add Rating</h1>
+</div>
+
+<form id="rating-form" method="post" action="{% url 'rate:add_rating' %}" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <div class="fieldWrapper">
+    <div class="form-group">
         <label for="media-type-selector">Type:</label>
-        <select id="media-type-selector" name="media_type" onchange="updateFormFields()">
+        <select id="media-type-selector" name="media_type" class="form-control" onchange="updateFormFields()">
             <option value="">--Please choose an option--</option>
             <option value="movie">Movie</option>
             <option value="book">Book</option>
         </select>
     </div>
 
-    <div class="fieldWrapper">
-        <label for="id_title">Title:</label>
-        <input type="text" id="id_title" name="title" maxlength="200" required />
-        <div class="errorlist"></div>
-    </div>
-
     <div id="dynamic-fields">
+        <!-- This comment can be removed if needed -->
     </div>
 
-    <input type="submit" value="Submit Rating">
+    <button type="submit" class="btn btn-primary">Submit Rating</button>
 </form>
 
 <script>
 function updateFormFields() {
     const mediaType = document.getElementById('media-type-selector').value;
     const dynamicFields = document.getElementById('dynamic-fields');
-    const errorList = dynamicFields.getElementsByClassName('errorlist')[0];
+    
+    dynamicFields.innerHTML = '';
 
-    if (mediaType === 'movie') {
-        dynamicFields.innerHTML = `
-            <div class="fieldWrapper">
-                <label for="id_rating">Rating:</label>
-                <input type="number" id="id_rating" name="rating" required />
-                <div class="errorlist"></div>
-            </div>
-            <div class="fieldWrapper">
-                <label for="id_comment">Comment:</label>
-                <textarea id="id_comment" name="comment"></textarea>
-                <div class="errorlist"></div>
-            </div>
-            <div class="fieldWrapper">
-                <label for="id_image">Image:</label>
-                <input type="file" id="id_image" name="image" />
-                <div class="errorlist"></div>
-            </div>
-        `;
-    } else if (mediaType === 'book') {
-        dynamicFields.innerHTML = `
-            <!-- Similar structure for book fields, change name attributes if needed -->
-            <div class="fieldWrapper">
-                <label for="id_rating">Rating:</label>
-                <input type="number" id="id_rating" name="rating" required />
-                <div class="errorlist"></div>
-            </div>
-            <div class="fieldWrapper">
-                <label for="id_comment">Comment:</label>
-                <textarea id="id_comment" name="comment"></textarea>
-                <div class="errorlist"></div>
-            </div>
-            <div class="fieldWrapper">
-                <label for="id_image">Image:</label>
-                <input type="file" id="id_image" name="image" />
-                <div class="errorlist"></div>
-            </div>
-        `;
-    } else {
-        dynamicFields.innerHTML = '';
+    if (mediaType) {
+        const titleFieldName = mediaType === 'movie' ? 'title' : 'book_title';
+        const titleLabel = mediaType === 'movie' ? 'Movie Title:' : 'Book Title:';
+
+        createInputField(dynamicFields, titleFieldName, titleLabel);
+
+        createInputField(dynamicFields, 'genre', 'Genre:');
+
+        createInputField(dynamicFields, 'rating', 'Rating:', 'number');
+
+        createTextareaField(dynamicFields, 'comment', 'Comment:');
+
+        createInputField(dynamicFields, 'image', 'Image:', 'file');
     }
 }
+
+function createInputField(container, name, label, type = 'text') {
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    div.innerHTML = `
+        <label for="id_${name}">${label}</label>
+        <input type="${type}" id="id_${name}" name="${name}" class="form-control" ${type === 'text' ? 'maxlength="200"' : ''} required />
+    `;
+    container.appendChild(div);
+}
+
+function createTextareaField(container, name, label) {
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    div.innerHTML = `
+        <label for="id_${name}">${label}</label>
+        <textarea id="id_${name}" name="${name}" class="form-control"></textarea>
+    `;
+    container.appendChild(div);
+}
+
 document.addEventListener('DOMContentLoaded', updateFormFields);
 </script>
 
