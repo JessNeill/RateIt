@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block body_block %}
+
 <style>
     * {
       box-sizing: border-box;
@@ -13,7 +14,7 @@
     
     .column {
       float: left;
-      width: 225px;
+      width: 275px;
       padding: 5px;
     }
     
@@ -23,54 +24,38 @@
       clear: both;
       display: table;
     }
-    </style>
+</style>
+
 <div class = "jumbotron p-4">
     <h1 class="jumbotron-heading">RateIt!</h1>
-        <h2 class ="h2">Most Popular Movies</h2>
-        <div class="row">
+<h2>Most Popular Movies</h2>
+ <div class="row">
+        {% for movie in movies %}
             <div class="column">
-            <figure>
-                <img style="width: 100%" src="{% static 'images/jaws.jpg' %}" alt="jaws poster" height="275"/>
-                <figcaption>Jaws</figcaption>
-            </figure>
-            </div>
-            <div class="column">
-            <figure>
-                <img style="width: 100%" src="{% static 'images/pulp_fiction.jpg' %}" alt="pulp fiction poster" height="275"/>
-                <figcaption>Pulp Fiction</figcaption>
-            </figure>
-            </div>
-            <div class="column">
-            <figure>
-                <img style="width: 100%" src="{% static 'images/justice_league.jpg' %}" alt="justice league poster" height="275"/>
-                <figcaption>The Justice League</figcaption>
-            </figure>
-            </div>
+                <h3>{{movie.title}}</h3>
+                <h5>Rating:{{movie.rating}}</h5>
+                <figure>
+                    <img style="width: 100%" src="{{ movie.image }}"; this.src="'/media/{{ movie.image }}" alt="{{ movie.title }} poster" height="275"/>
+                    
+                </figure>
                 
-                
-        </div>
-
-        <h2 class="h2">Most Popular Books</h2>
-        <div class="row">
+            </div>
+        {% endfor %}
+           
+    </div>
+    
+    <h2>Most Popular Books</h2>
+    <div class="row">
+        {% for book in books %}
             <div class="column">
+                <h3>{{book.title}}</h3>
+                <h5>Rating:{{book.rating}}</h5>
                 <figure>
-                    <img style="width: 100%" src="{% static 'images/the_hobbit.jpg' %}" alt="the hobbit cover" height="275"/>
-                    <figcaption>The Hobbit</figcaption>
+                    <img style="width: 100%" src="{{ book.image }}"; this.src="'/media/{{ book.image }}" alt="{{ book.title }} poster" height="275"/>
                 </figure>
             </div>
-            <div class="column">
-                <figure>
-                    <img style="width: 100%" src="{% static 'images/circe.jpg' %}" alt="circe cover" height="275"/>
-                    <figcaption>Circe</figcaption>
-                </figure>
-            </div>
-            <div class="column">
-                <figure>
-                    <img style="width: 100%" src="{% static 'images/great_gatsby.jpg' %}" alt="great gatsby cover" height="275"/>
-                    <figcaption>Great Gatsby</figcaption>
-                </figure>
-            </div>
-        </div>
+        {% endfor %}
+           
+    </div>
 </div>
 {% endblock %}
-

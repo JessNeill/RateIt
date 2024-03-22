@@ -44,7 +44,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
-      
+
+    
 class Movie(models.Model):
     movie_id = models.IntegerField(unique = True)
     title = models.CharField(max_length = 100)
@@ -58,7 +59,7 @@ class Book(models.Model):
     book_id = models.IntegerField(unique = True)
     book_title = models.CharField(max_length = 100)
     genre = models.CharField(max_length = 50)
-    picture = models.ImageField(upload_to='images', blank = True)
+    picture = models.ImageField(upload_to='media/', blank = True)
 
     def __str__(self):
         return self.book_title
@@ -66,18 +67,18 @@ class Book(models.Model):
 class Movie_Rating(models.Model):
     movie_rating_id = models.IntegerField(unique = True)
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
-        return str(self.movie_rating_id)
+        return str(self.movie_id) #change to .user
     
 class Book_Rating(models.Model):
     book_rating_id = models.IntegerField(unique = True)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
@@ -89,7 +90,7 @@ class Book_Rating(models.Model):
         verbose_name_plural = 'Book Ratings'
 
     def __str__(self):
-        return str(self.book_rating_id)
+        return str(self.book_id)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
