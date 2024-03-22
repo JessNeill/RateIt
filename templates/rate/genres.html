@@ -17,7 +17,7 @@
                 <div>
                     <h4>{{ movie.genre }} - {{ movie.title }}</h4>
                     {% if movie.picture %}
-                        <img src="{{ movie.images }}" alt="{{ movie.title }}" />
+                        <img src="{{ movie.picture.url }}" alt="{{ movie.title }}" />
                     {% else %}
                         <p>No image available.</p>
                     {% endif %}
