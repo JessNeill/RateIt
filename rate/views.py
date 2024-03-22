@@ -17,52 +17,28 @@ from .forms import UserForm, UserProfileForm
 from rate.models import Movie, Movie_Rating, Book, Book_Rating
 
 def index(request):
-    # Aggregate average rating for each movie
-    movie_ratings = (
-        Movie_Rating.objects
-        .values('movie')
-        .annotate(average_rating=Avg('rating'))
-        .order_by('-average_rating')[:10]  # Assuming you want the top 10
-    )
+    # Get top 10 movies based on average rating
+    top_movies = Movie.objects.annotate(avg_rating=Avg('movie_rating__rating')).order_by('-avg_rating')[:10]
 
-    # Get corresponding movie details
-    movies = [
-        {
-            'movie_id': rating['movie'],
-            'rating': rating['average_rating'],
-            'title': Movie.objects.get(pk=rating['movie']).title,
-            'image': Movie.objects.get(pk=rating['movie']).picture.url if Movie.objects.get(pk=rating['movie']).picture else None,
-        }
-        for rating in movie_ratings
-    ]
+    # Get top 10 books based on average rating
+    top_books = Book.objects.annotate(avg_rating=Avg('book_rating__rating')).order_by('-avg_rating')[:10]
 
-    # Aggregate average rating for each book
-    book_ratings = (
-        Book_Rating.objects
-        .values('book')
-        .annotate(average_rating=Avg('rating'))
-        .order_by('-average_rating')[:10]  # Assuming you want the top 10
-    )
-
-    # Get corresponding book details
-    books = [
-        {
-            'book_id': rating['book'],
-            'rating': rating['average_rating'],
-            'title': Book.objects.get(pk=rating['book']).book_title,
-            'image': Book.objects.get(pk=rating['book']).picture.url if Book.objects.get(pk=rating['book']).picture else None,
-        }
-        for rating in book_ratings
-    ]
-
-    # Create context dictionary
     context = {
-        'movies': movies,
-        'books': books,
+        'top_movies': [{
+            'title': movie.title,
+            'avg_rating': movie.avg_rating,
+            'image_url': movie.picture.url if movie.picture else None,
+        } for movie in top_movies],
+
+        'top_books': [{
+            'title': book.book_title,
+            'avg_rating': book.avg_rating,
+            'image_url': book.picture.url if book.picture else None,
+        } for book in top_books],
     }
 
-    # Pass context dictionary to the template
-    return render(request, 'rate/index.html', context=context)
+    return render(request, 'rate/index.html', context)
+
 
 
 def genres(request):
@@ -77,6 +53,7 @@ def genres(request):
         .annotate(average_rating=Avg('book_rating__rating'))
         .order_by('genre', '-average_rating')
     )
+    print(movies)
     
     return render(request, 'rate/genres.html', {
         'movies': movies,
@@ -88,43 +65,49 @@ def genres(request):
 def add_rating(request):
     if request.method == 'POST':
         media_type = request.POST.get('media_type')
-        genre = request.POST.get('genre')
-        form = None
-
-        if media_type == 'movie':
-            form = MovieRatingForm(request.POST, request.FILES)
-            title = form['title'].value()
-        elif media_type == 'book':
-            form = BookRatingForm(request.POST, request.FILES)
-            book_title = form['book_title'].value()
-        else:
-            messages.error(request, 'Invalid media type')
-            return redirect('rate:index')
+        form = MovieRatingForm(request.POST, request.FILES) if media_type == 'movie' else BookRatingForm(request.POST, request.FILES)
 
         if form.is_valid():
+            title = form.cleaned_data.get('title') if media_type == 'movie' else form.cleaned_data.get('book_title')
+            genre = form.cleaned_data.get('genre')
+            image = request.FILES.get('image')  # Handle the uploaded file
+            
             rating_instance = form.save(commit=False)
             if media_type == 'movie':
                 media, created = Movie.objects.get_or_create(title=title, defaults={'genre': genre})
-                rating_instance.movie = media
+                if created and image:
+                    media.picture = image
+                    media.save()
             elif media_type == 'book':
-                media, created = Book.objects.get_or_create(book_title=book_title, defaults={'genre': genre})
-                rating_instance.book = media
+                media, created = Book.objects.get_or_create(book_title=title, defaults={'genre': genre})
+                if created and image:
+                    media.picture = image
+                    media.save()
 
             rating_instance.user = request.user
+            if media_type == 'movie':
+                rating_instance.movie = media
+            elif media_type == 'book':
+                rating_instance.book = media
             rating_instance.save()
+
             messages.success(request, 'Your rating has been added successfully!')
             return redirect('rate:index')
         else:
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"{field}: {error}")
-            return redirect('rate:add_rating')
-
+            return render(request, 'rate/add_rating.html', {
+                'movie_form': form if media_type == 'movie' else MovieRatingForm(),
+                'book_form': form if media_type == 'book' else BookRatingForm(),
+                'media_type': media_type,
+            })
     else:
         return render(request, 'rate/add_rating.html', {
             'movie_form': MovieRatingForm(),
             'book_form': BookRatingForm()
         })
+
     
 
 @login_required
@@ -150,6 +133,8 @@ def my_media(request):
             'comment': br.comment
         } for br in my_book_ratings]
     }
+
+    print(context)
     
     return render(request, 'rate/my_media.html', context)
 

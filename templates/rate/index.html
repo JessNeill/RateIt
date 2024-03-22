@@ -1,61 +1,35 @@
 {% extends 'rate/base.html' %}
-{% load staticfiles %}
+{% load static %}
 
-{% block title_block %}
-    Homepage
-{% endblock %}
+{% block title_block %}Homepage{% endblock %}
 
 {% block body_block %}
+<!-- Your styles and HTML structure here -->
+<div class="row">
+    {% for movie in top_movies %}
+        <div class="column">
+            <h3>{{ movie.title }}</h3>
+            <p>Average Rating: {{ movie.avg_rating }}</p>
+            {% if movie.image_url %}
+                <img src="{{ movie.image_url }}" alt="{{ movie.title }} Poster" style="width: 100%; height: auto;">
+            {% else %}
+                <p>No image available.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
 
-<style>
-    * {
-      box-sizing: border-box;
-    }
-    
-    .column {
-      float: left;
-      width: 275px;
-      padding: 5px;
-    }
-    
-    /* Clearfix (clear floats) */
-    .row::after {
-      content: "";
-      clear: both;
-      display: table;
-    }
-</style>
-
-<div class = "jumbotron p-4">
-    <h1 class="jumbotron-heading">RateIt!</h1>
-<h2>Most Popular Movies</h2>
- <div class="row">
-        {% for movie in movies %}
-            <div class="column">
-                <h3>{{movie.title}}</h3>
-                <h5>Rating:{{movie.rating}}</h5>
-                <figure>
-                    <img style="width: 100%" src="{{ movie.image }}"; this.src="'/media/{{ movie.image }}" alt="{{ movie.title }} poster" height="275"/>
-                    
-                </figure>
-                
-            </div>
-        {% endfor %}
-           
-    </div>
-    
-    <h2>Most Popular Books</h2>
-    <div class="row">
-        {% for book in books %}
-            <div class="column">
-                <h3>{{book.title}}</h3>
-                <h5>Rating:{{book.rating}}</h5>
-                <figure>
-                    <img style="width: 100%" src="{{ book.image }}"; this.src="'/media/{{ book.image }}" alt="{{ book.title }} poster" height="275"/>
-                </figure>
-            </div>
-        {% endfor %}
-           
-    </div>
+<div class="row">
+    {% for book in top_books %}
+        <div class="column">
+            <h3>{{ book.title }}</h3>
+            <p>Average Rating: {{ book.avg_rating }}</p>
+            {% if book.image_url %}
+                <img src="{{ book.image_url }}" alt="{{ book.title }} Cover" style="width: 100%; height: auto;">
+            {% else %}
+                <p>No image available.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}
