@@ -6,31 +6,58 @@
 {% endblock %}
 
 {% block body_block %}
+<style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    .column {
+      float: left;
+      width: 225px;
+      padding: 5px;
+    }
+    
+    /* Clearfix (clear floats) */
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+</style>
 <h1>Genres</h1>
 
-{% for movie in movies %}
-    {% if movie.genre == 'Crime' %}
-        <h2>Crime Movie</h2>
-        <h3>{{ movie.title }}</h3>
-        <h4> Rating: {{ movie.rating }}</h4>
+    {% for genre, movies_list in movies.items %}
+    {% if movies_list%}
+        <h2>{{genre}} Movies</h2>
+        <div class="row">
+            {% for movie in movies_list %}
+                <div class="column">
+                    <h4>{{ movie.title }}</h4>
+                    <h6>Rating: {{ movie.rating }}</h6>
+                    <figure>
+                        <img style="width: 100%" src="{{ movie.image }}"; this.src="'/media/{{ movie.image }}" alt="{{ movie.title }} poster" height="275"/>
+                    </figure>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
-    {% if movie.genre == 'Thriller' %}
-        <h2>Thriller Movie</h2>
-        <h3>{{ movie.title }}</h3>
-        <h4> Rating: {{ movie.rating }}</h4>
-    {% endif %}
-{% endfor %}
+    {% endfor %}   
 
-{% for book in books %}
-    {% if book.genre == 'Tragedy' %}
-        <h2>Tragedy Book</h2>
-        <h3>{{ book.title }}</h3>
-        <h4> Rating: {{ book.rating }}</h4>
+    {% for genre, books_list in books.items %}
+    {% if books_list %}
+        
+        <h2>{{ genre }} Books</h2>
+        <div class="row">
+            {% for book in books_list%}
+                <div class="column">
+                    <h4>{{ book.title }}</h4>
+                    <h6>Rating: {{ book.rating }}</h6>
+                    <figure>
+                        <img style="width: 100%" src="{{ book.image }}"; this.src="'/media/{{ book.image }}" alt="{{ book.title }} poster" height="275"/>
+                    </figure>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
-    {% if book.genre == 'Fantasy' %}
-        <h2>Fantasy Book</h2>
-        <h3>{{ book.title }}</h3>
-        <h4> Rating: {{ book.rating }}</h4>
-    {% endif %}
-{% endfor %}
+    {% endfor %}
 {% endblock %}

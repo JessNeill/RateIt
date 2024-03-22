@@ -44,7 +44,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
-      
+
+    
 class Movie(models.Model):
     movie_id = models.IntegerField(unique = True)
     title = models.CharField(max_length = 100)
@@ -56,12 +57,12 @@ class Movie(models.Model):
 
 class Book(models.Model):
     book_id = models.IntegerField(unique = True)
-    title = models.CharField(max_length = 100)
+    book_title = models.CharField(max_length = 100)
     genre = models.CharField(max_length = 50)
-    picture = models.ImageField(upload_to='images', blank = True)
+    picture = models.ImageField(upload_to='media/', blank = True)
 
     def __str__(self):
-        return self.title
+        return self.book_title
     
 class Movie_Rating(models.Model):
     #User = get_user_model()
@@ -69,28 +70,30 @@ class Movie_Rating(models.Model):
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
     #username = models.ForeignKey(Movie, to_field='user_name', on_delete=models.CASCADE)
     #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.IntegerField()
+    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    rating = models.IntegerField(max_length = 1)
     comment = models.CharField(max_length = 300)
 
     class Meta:
         verbose_name_plural = 'Movie Ratings'
         
     def __str__(self):
-        return str(self.movie_rating_id)
+        return str(self.movie_id) #change to .user
     
 class Book_Rating(models.Model):
     #User = get_user_model()
     book_rating_id = models.IntegerField(unique = True)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
     #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.IntegerField()
+    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    rating = models.IntegerField(max_length = 1)
     comment = models.CharField(max_length = 300)
 
     class Meta:
         verbose_name_plural = 'Book Ratings'
 
     def __str__(self):
-        return str(self.book_rating_id)
+        return str(self.book_id)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
