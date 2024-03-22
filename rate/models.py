@@ -45,7 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
-      
+
+    
 class Movie(models.Model):
     GENRE_CHOICES = (
         ('Crime', 'Crime'),
@@ -68,13 +69,16 @@ class Book(models.Model):
     )
     book_id = models.AutoField(primary_key=True)
     book_title = models.CharField(max_length = 100)
+
     genre = models.CharField(max_length=50, choices=GENRE_CHOICES)
-    picture = models.ImageField(upload_to='images', blank = True)
+    picture = models.ImageField(upload_to='media/', blank = True)
+
 
     def __str__(self):
         return self.book_title
     
 class Movie_Rating(models.Model):
+
     movie_rating_id = models.AutoField(primary_key=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

@@ -6,7 +6,42 @@
 {% endblock %}
 
 {% block body_block %}
+<style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    .column {
+      float: left;
+      width: 225px;
+      padding: 5px;
+    }
+    
+    /* Clearfix (clear floats) */
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+</style>
 <h1>Genres</h1>
+    {% for genre, movies_list in movies.items %}
+    {% if movies_list%}
+        <h2>{{genre}} Movies</h2>
+        <div class="row">
+            {% for movie in movies_list %}
+                <div class="column">
+                    <h4>{{ movie.title }}</h4>
+                    <h6>Rating: {{ movie.rating }}</h6>
+                    <figure>
+                        <img style="width: 100%" src="{{ movie.image }}"; this.src="'/media/{{ movie.image }}" alt="{{ movie.title }} poster" height="275"/>
+                    </figure>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endfor %}   
+
 
 <div class="container">
     <div class="row">
@@ -46,3 +81,4 @@
     </div>
 </div>
 {% endblock %}
+
