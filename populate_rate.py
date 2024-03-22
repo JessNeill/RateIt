@@ -53,7 +53,7 @@ def populate():
     for rating_data in movie_rating:
         Movie_Rating.objects.get_or_create(
             movie_rating_id=rating_data['movie_rating_id'],
-            movie=Movie.objects.get(movie_id=rating_data['movie_id']),
+            movie=Movie.objects.get(movie_id=rating_data['movie_id']).movie_id,
             #user=User.objects.get(user_id=rating_data['user']),
             rating=rating_data['rating'],
             comment=rating_data['comment']
@@ -62,7 +62,7 @@ def populate():
     for rating_data in book_rating:
         Book_Rating.objects.get_or_create(
             book_rating_id=rating_data['book_rating_id'],
-            book_id=Book.objects.get(book_id=rating_data['book_id']),
+            book_id=Book.objects.get(book_id=rating_data['book_id']).book_id,
             #user=User.objects.get(user_id=rating_data['user']),
             rating=rating_data['rating'],
             comment=rating_data['comment']
