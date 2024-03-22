@@ -67,7 +67,7 @@ def index(request):
     return render(request, 'rate/index.html', context=context_dict)
 
 
-  def genres(request):
+def genres(request):
     movies = Movie.objects.all()
     
     genres={'movies':{'Fantasy':[],'Comedy':[],'Romance':[],'Action':[]},
