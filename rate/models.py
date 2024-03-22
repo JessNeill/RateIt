@@ -10,7 +10,8 @@ class MyUserManager(BaseUserManager):
         
         username = self.normalize_email(username)
         
-        if User.objects.filter(username=username).exists():
+        user_model = get_user_model()
+        if user_model.objects.filter(username=username).exists():
             raise ValueError('A user with this username already exists')
         
         user = self.model(username=username, **extra_fields)
@@ -46,50 +47,55 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
       
 class Movie(models.Model):
-    movie_id = models.IntegerField(unique = True)
+    GENRE_CHOICES = (
+        ('Crime', 'Crime'),
+        ('Thriller', 'Thriller'),
+        ('Others', 'Others'),
+    )
+    movie_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length = 100)
-    genre = models.CharField(max_length = 50)
+    genre = models.CharField(max_length=50, choices=GENRE_CHOICES)
     picture = models.ImageField(upload_to='images', blank = True)
 
     def __str__(self):
         return self.title
 
 class Book(models.Model):
-    book_id = models.IntegerField(unique = True)
+    GENRE_CHOICES = (
+        ('Fantasy', 'Fantasy'),
+        ('Tragedy', 'Tragedy'),
+        ('Others', 'Others'),
+    )
+    book_id = models.AutoField(primary_key=True)
     book_title = models.CharField(max_length = 100)
-    genre = models.CharField(max_length = 50)
+    genre = models.CharField(max_length=50, choices=GENRE_CHOICES)
     picture = models.ImageField(upload_to='images', blank = True)
 
     def __str__(self):
         return self.book_title
     
 class Movie_Rating(models.Model):
-    movie_rating_id = models.IntegerField(unique = True)
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    movie_rating_id = models.AutoField(primary_key=True)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
-        return str(self.movie_rating_id)
-    
+        return f"{self.movie.title} - {self.user.username}"
+
+
 class Book_Rating(models.Model):
-    book_rating_id = models.IntegerField(unique = True)
-    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book_rating_id = models.AutoField(primary_key=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 
-    class Meta:
-        verbose_name_plural = 'Book Ratings'
-
-    class Meta:
-        verbose_name_plural = 'Book Ratings'
-
     def __str__(self):
-        return str(self.book_rating_id)
+        return f"{self.book.book_title} - {self.user.username}"
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')

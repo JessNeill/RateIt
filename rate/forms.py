@@ -22,12 +22,11 @@ class MovieRatingForm(forms.ModelForm):
 
     class Meta:
         model = Movie_Rating
-        fields = ['movie_id', 'rating', 'comment', 'image']
+        fields = ['rating', 'comment', 'image']
 
 class BookRatingForm(forms.ModelForm):
-    title = forms.CharField(max_length=200)
+    book_title = forms.CharField(max_length=200)
 
     class Meta:
         model = Book_Rating
-        fields = ['book_id', 'rating', 'comment', 'image']
-
+        fields = ['rating', 'comment', 'image']

@@ -6,78 +6,90 @@ Add Rating
 {% endblock %}
 
 {% block body_block %}
-<h1>Add Rating</h1>
-<form id="rating-form" method="post" action="{% url 'rate:add_rating' %}" enctype="multipart/form/data">
+<div class="pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Add Rating</h1>
+</div>
+
+<form id="rating-form" method="post" action="{% url 'rate:add_rating' %}" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <div class="fieldWrapper">
+    <div class="form-group">
         <label for="media-type-selector">Type:</label>
-        <select id="media-type-selector" name="media_type" onchange="updateFormFields()">
+        <select id="media-type-selector" name="media_type" class="form-control" onchange="updateFormFields()">
             <option value="">--Please choose an option--</option>
             <option value="movie">Movie</option>
             <option value="book">Book</option>
         </select>
     </div>
 
-    <div class="fieldWrapper">
-        <label for="id_title">Title:</label>
-        <input type="text" id="id_title" name="title" maxlength="200" required />
-        <div class="errorlist"></div>
-    </div>
-
     <div id="dynamic-fields">
+        <!-- This comment can be removed if you wish -->
     </div>
 
-    <input type="submit" value="Submit Rating">
+    <button type="submit" class="btn btn-primary">Submit Rating</button>
 </form>
 
 <script>
 function updateFormFields() {
     const mediaType = document.getElementById('media-type-selector').value;
     const dynamicFields = document.getElementById('dynamic-fields');
-    const errorList = dynamicFields.getElementsByClassName('errorlist')[0];
+    
+    dynamicFields.innerHTML = '';
 
-    if (mediaType === 'movie') {
-        dynamicFields.innerHTML = `
-            <div class="fieldWrapper">
-                <label for="id_rating">Rating:</label>
-                <input type="number" id="id_rating" name="rating" required />
-                <div class="errorlist"></div>
-            </div>
-            <div class="fieldWrapper">
-                <label for="id_comment">Comment:</label>
-                <textarea id="id_comment" name="comment"></textarea>
-                <div class="errorlist"></div>
-            </div>
-            <div class="fieldWrapper">
-                <label for="id_image">Image:</label>
-                <input type="file" id="id_image" name="image" />
-                <div class="errorlist"></div>
-            </div>
+    if (mediaType) {
+
+        let genreOptions = '<option value="Others">Others</option>';
+        if (mediaType === 'movie') {
+            genreOptions += '<option value="Crime">Crime</option><option value="Thriller">Thriller</option>';
+        } else if (mediaType === 'book') {
+            genreOptions += '<option value="Fantasy">Fantasy</option><option value="Tragedy">Tragedy</option>';
+        }
+
+        const genreDiv = document.createElement('div');
+        genreDiv.className = 'form-group';
+        genreDiv.innerHTML = `
+            <label for="id_genre">Genre:</label>
+            <select id="id_genre" name="genre" class="form-control">${genreOptions}</select>
         `;
-    } else if (mediaType === 'book') {
-        dynamicFields.innerHTML = `
-            <!-- Similar structure for book fields, change name attributes if needed -->
-            <div class="fieldWrapper">
-                <label for="id_rating">Rating:</label>
-                <input type="number" id="id_rating" name="rating" required />
-                <div class="errorlist"></div>
-            </div>
-            <div class="fieldWrapper">
-                <label for="id_comment">Comment:</label>
-                <textarea id="id_comment" name="comment"></textarea>
-                <div class="errorlist"></div>
-            </div>
-            <div class="fieldWrapper">
-                <label for="id_image">Image:</label>
-                <input type="file" id="id_image" name="image" />
-                <div class="errorlist"></div>
-            </div>
+        dynamicFields.appendChild(genreDiv);
+        
+        const titleFieldName = mediaType === 'movie' ? 'title' : 'book_title';
+        const titleLabel = mediaType === 'movie' ? 'Movie Title:' : 'Book Title:';
+
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'form-group';
+        titleDiv.innerHTML = `
+            <label for="id_${titleFieldName}">${titleLabel}</label>
+            <input type="text" id="id_${titleFieldName}" name="${titleFieldName}" class="form-control" maxlength="200" required />
         `;
-    } else {
-        dynamicFields.innerHTML = '';
+        dynamicFields.appendChild(titleDiv);
+
+        const ratingDiv = document.createElement('div');
+        ratingDiv.className = 'form-group';
+        ratingDiv.innerHTML = `
+            <label for="id_rating">Rating:</label>
+            <input type="number" id="id_rating" name="rating" class="form-control" required />
+        `;
+        dynamicFields.appendChild(ratingDiv);
+
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'form-group';
+        commentDiv.innerHTML = `
+            <label for="id_comment">Comment:</label>
+            <textarea id="id_comment" name="comment" class="form-control"></textarea>
+        `;
+        dynamicFields.appendChild(commentDiv);
+
+        const imageDiv = document.createElement('div');
+        imageDiv.className = 'form-group';
+        imageDiv.innerHTML = `
+            <label for="id_image">Image:</label>
+            <input type="file" id="id_image" name="image" class="form-control-file" />
+        `;
+        dynamicFields.appendChild(imageDiv);
     }
 }
+
 document.addEventListener('DOMContentLoaded', updateFormFields);
 </script>
 

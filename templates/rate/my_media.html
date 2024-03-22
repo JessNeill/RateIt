@@ -1,34 +1,48 @@
-{% extends "rate/base.html" %}
-{% load staticfiles %}
- 
+{% extends 'rate/base.html' %}
+{% load static %}
+
 {% block title_block %}
     My Books and Movies
 {% endblock %}
- 
+
 {% block body_block %}
-<h1>My Books and Movies</h1>
-    <!--display all movies rated: -->
-    {%if my_movies %} <!--if a movie has been rated by the user -->
-        <h2> My Movies</h2>
-   
-        {% for movie in my_movies %}
-            <h3>{{ movie.title }}</h3>
-            Genre: {{ movie.genre }}</br>
-            Review: {{ movie.comment }}</br>
-            Image: {{ movie.image }}</br>
-            Rating: {{ movie.rating }}</br>
-        {% endfor %}
-    {% endif %}
-    {% if my_books %}
-        <h2> My Books</h2>
-       
-        {% for book in my_books %}
-            <h3>{{ book.title }}</h3>
-            Genre: {{ book.genre }}</br>
-            Review: {{ book.comment }}</br>
-            Image: {{ book.image }}</br>
-            Rating: {{ book.rating }}</br>
-        {% endfor %}
-    {% endif %}
+<div class="container">
+    <div class="row">
+        <!-- Movies Column -->
+        <div class="col-md-6">
+            <h2>My Movies</h2>
+            {% for movie in my_movies %}
+                <div>
+                    <h4>{{ movie.title }}</h4>
+                    <p>Genre: {{ movie.genre }}</p>
+                    <p>Rating: {{ movie.rating }}</p>
+                    <p>Comment: {{ movie.comment }}</p>
+                    {% if movie.image %}
+                        <img src="{{ movie.image }}" alt="{{ movie.title }}" style="width:100px; height:auto;">
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>You have not rated any movies yet.</p>
+            {% endfor %}
+        </div>
+        
+        <!-- Books Column -->
+        <div class="col-md-6">
+            <h2>My Books</h2>
+            {% for book in my_books %}
+                <div>
+                    <h4>{{ book.title }}</h4>
+                    <p>Genre: {{ book.genre }}</p>
+                    <p>Rating: {{ book.rating }}</p>
+                    <p>Comment: {{ book.comment }}</p>
+                    {% if book.image %}
+                        <img src="{{ book.image }}" alt="{{ book.title }}" style="width:100px; height:auto;">
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>You have not rated any books yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}
- 

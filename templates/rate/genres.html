@@ -8,37 +8,41 @@
 {% block body_block %}
 <h1>Genres</h1>
 
-    {% for movie in movies %}
-        {% if movie.genre == 'Crime' %}
-            <h2>Crime Movie</h2>
-            <h4>{{ movie.title }}</h4>
-            <ul>
-                <h6>Rating:{{ movie_rating.rating }}</h6>
-            </ul>
-        {% endif %}
-        {% if movie.genre == 'Thriller' %}
-            <h2>Thriller Movie</h2>
-            <h4>{{ movie.title }}</h4>
-            <ul>
-                <h6>Rating:{{ movie_rating.rating }}</h6>
-            </ul>
-        {% endif %}
-    {% endfor %}
-
-    {% for book in books %}
-        {% if book.genre == 'Tragedy' %}
-            <h2>Tragedy Book</h2>
-            <h4>{{ book.title }}</h4>
-            <ul>
-                <h6>Rating:{{ book_rating.rating }}</h6>
-            </ul>
-        {% endif %}
-        {% if book.genre == 'Fantasy' %}
-            <h2>Fantasy Book</h2>
-            <h3>{{ book.title }}</h3>
-            <ul>
-                <h6>Rating:{{ book_rating.rating }}</h6>
-            </ul>
-        {% endif %}
-    {% endfor %}
+<div class="container">
+    <div class="row">
+        <!-- Movies Column -->
+        <div class="col-md-6">
+            <h2>Movies</h2>
+            {% for movie in movies %}
+                <div>
+                    <h4>{{ movie.genre }}: {{ movie.title }}</h4>
+                    {% for rating in movie.movie_rating_set.all %}
+                        <ul>
+                            <li>Rating: {{ rating.rating }}</li>
+                        </ul>
+                    {% endfor %}
+                </div>
+            {% empty %}
+                <p>No movies to display.</p>
+            {% endfor %}
+        </div>
+        
+        <!-- Books Column -->
+        <div class="col-md-6">
+            <h2>Books</h2>
+            {% for book in books %}
+                <div>
+                    <h4>{{ book.genre }}: {{ book.book_title }}</h4>
+                    {% for rating in book.book_rating_set.all %}
+                        <ul>
+                            <li>Rating: {{ rating.rating }}</li>
+                        </ul>
+                    {% endfor %}
+                </div>
+            {% empty %}
+                <p>No books to display.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

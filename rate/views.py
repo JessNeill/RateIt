@@ -31,61 +31,73 @@ def genres(request):
 @login_required
 def add_rating(request):
     if request.method == 'POST':
-        form = MovieRatingForm(request.POST, request.FILES) if request.POST.get('media_type') == 'movie' else BookRatingForm(request.POST, request.FILES)
+        media_type = request.POST.get('media_type')
+        genre = request.POST.get('genre')
+        form = None
+
+        if media_type == 'movie':
+            form = MovieRatingForm(request.POST, request.FILES)
+            title = form['title'].value()
+        elif media_type == 'book':
+            form = BookRatingForm(request.POST, request.FILES)
+            book_title = form['book_title'].value()
+        else:
+            messages.error(request, 'Invalid media type')
+            return redirect('rate:index')
 
         if form.is_valid():
-            title = form.cleaned_data.get('title')
             rating_instance = form.save(commit=False)
+            if media_type == 'movie':
+                media, created = Movie.objects.get_or_create(title=title, defaults={'genre': genre})
+                rating_instance.movie = media
+            elif media_type == 'book':
+                media, created = Book.objects.get_or_create(book_title=book_title, defaults={'genre': genre})
+                rating_instance.book = media
+
             rating_instance.user = request.user
-
-            if request.POST.get('media_type') == 'movie':
-                movie, created = Movie.objects.get_or_create(title=title)
-                rating_instance.movie_id = movie
-            else:
-                book, created = Book.objects.get_or_create(title=title)
-                rating_instance.book_id = book
-
             rating_instance.save()
-            return JsonResponse({'success': True})
+            messages.success(request, 'Your rating has been added successfully!')
+            return redirect('rate:index')
         else:
-            return JsonResponse({'success': False, 'errors': form.errors})
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+            return redirect('rate:add_rating')
+
     else:
-        movie_form = MovieRatingForm()
-        book_form = BookRatingForm()
         return render(request, 'rate/add_rating.html', {
-            'movie_form': movie_form,
-            'book_form': book_form
+            'movie_form': MovieRatingForm(),
+            'book_form': BookRatingForm()
         })
+
+
 
 
 @login_required
 def my_media(request):
-    context_dict={}
-    my_br_list = Book_Rating.objects.filter(user=request.user.user_id).values()
-    context_dict['my_books']=my_br_list
- 
-    for br in my_br_list:
-        title = Book.objects.filter(book_id=br.book_id).book_title
-        genre = Book.objects.filter(book_id=br.book_id).genre
-        image = Book.objects.filter(book_id=br.book_id).image
-        br['title']=title
-        br['genre']=genre
-        br['image']=image
-       
-    my_mr_list = Movie_Rating.objects.filter(user=request.user.user_id).values() ##it might be request.user.user_id but hopefully this is the right code for getting the current user id (request.user.id) the tutor wasnt all that confident
-    context_dict['my_movies'] = my_mr_list
-   
-    for mr in my_mr_list:
-        title = Movie.objects.filter(movie_id=mr.movie_id).title
-        genre = Movie.objects.filter(movie_id=mr.movie_id).genre
-        image = Movie.objects.filter(movie_id=mr.movie_id).image
-        mr['title']=title
-        mr['genre']=genre
-        mr['image']=image
-   
-    ##context_dict={'my_movies':{'movie_rating':6,'movie_id':2, 'user_id':4, 'rating': 6, 'comment': 'nice', 'title':"Oppenhimer", 'genre':"comedy", 'image':"eognoirad"},{...},{...}...}
-  
-    return render(request, 'rate/my_media.html', context=context_dict)
+    user = request.user
+    my_movie_ratings = Movie_Rating.objects.filter(user=user).select_related('movie')
+    my_book_ratings = Book_Rating.objects.filter(user=user).select_related('book')
+    
+    context = {
+        'my_movies': [{
+            'title': mr.movie.title,
+            'genre': mr.movie.genre,
+            'image': mr.movie.picture.url if mr.movie.picture else None,
+            'rating': mr.rating,
+            'comment': mr.comment
+        } for mr in my_movie_ratings],
+        
+        'my_books': [{
+            'title': br.book.book_title,
+            'genre': br.book.genre,
+            'image': br.book.picture.url if br.book.picture else None,
+            'rating': br.rating,
+            'comment': br.comment
+        } for br in my_book_ratings]
+    }
+    
+    return render(request, 'rate/my_media.html', context)
 
 def user_login(request):
     if request.method == 'POST':
@@ -95,26 +107,25 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
+                messages.success(request, "You are now logged in.")
                 return redirect('rate:index')
             else:
-                return HttpResponse("Your account is inactive.")
+                messages.warning(request, "Your account is inactive.")
+                return redirect('rate:login')
         else:
-            return HttpResponse("Invalid login details supplied.")
+            messages.error(request, "Invalid login details supplied.")
+            return redirect('rate:login')
     else:
         return render(request, 'rate/login.html')
 
-#is this supposed to be here??
 User = get_user_model()
 
 def register(request):
-    registered = False
     if request.method == 'POST':
         user_form = UserForm(request.POST)
         profile_form = UserProfileForm(request.POST)
-
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save(commit=False)
-
             user.set_password(user_form.cleaned_data['password'])
             user.save()
 
@@ -122,18 +133,23 @@ def register(request):
             profile.user = user
             profile.save()
 
-            registered = True
+            messages.success(request, "You have successfully registered.")
             return redirect('rate:login')
-            return redirect('rate:login')  
         else:
-            print(user_form.errors, profile_form.errors)
+            errors = []
+            for form in [user_form, profile_form]:
+                for field, error_messages in form.errors.items():
+                    for error in error_messages:
+                        errors.append(f"{field}: {error}")
+            for error in errors:
+                messages.error(request, error)
     else:
         user_form = UserForm()
         profile_form = UserProfileForm()
+
     return render(request, 'rate/register.html', {
         'user_form': user_form,
         'profile_form': profile_form,
-        'registered': registered
     })
 
 @login_required
