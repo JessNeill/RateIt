@@ -62,7 +62,7 @@ class Book(models.Model):
     picture = models.ImageField(upload_to='media/', blank = True)
 
     def __str__(self):
-        return self.book_title
+        return str(self.book_title)
     
 class Movie_Rating(models.Model):
     movie_rating_id = models.AutoField(primary_key=True)
@@ -73,7 +73,7 @@ class Movie_Rating(models.Model):
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
-        return str(self.movie_id) #change to .user
+        return str(self.movie) #change to .user
     
 class Book_Rating(models.Model):
     book_rating_id = models.AutoField(primary_key=True)
