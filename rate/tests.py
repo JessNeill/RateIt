@@ -26,30 +26,38 @@ class UserProfileFormTest(TestCase):
         form = UserProfileForm(data=form_data)
         self.assertTrue(form.is_valid())
 
-class MovieRatingFormTest(TestCase):
+class MovieRatingFormAdditionalTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user(username='movierater@example.com', password='movieratepass123')
-        self.movie = Movie.objects.create(movie_id=1, title='Pulp Fiction', genre='Crime')
+        self.user = User.objects.create_user(username='movierater2@example.com', password='movieratepass456')
+        self.movie = Movie.objects.create(title='Inception', genre='Action')
 
-    def test_movie_rating_form_valid(self):
-        form_data = {'movie_id': self.movie.movie_id, 'rating': 5, 'comment': 'Loved it, found it really interesting', 'title': 'Pulp Fiction'}
+    def test_movie_rating_form_missing_fields(self):
+        form_data = {'rating': 5}
         form = MovieRatingForm(data=form_data)
-        self.assertTrue(form.is_valid())
+        self.assertFalse(form.is_valid())
 
-class BookRatingFormTest(TestCase):
+    def test_movie_rating_form_invalid_data(self):
+        form_data = {'movie': 'Inception', 'rating': 'Excellent', 'comment': 'Great movie!'}
+        form = MovieRatingForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+class BookRatingFormAdditionalTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user(username='bookrater@example.com', password='bookratepass123')
-        self.book = Book.objects.create(book_id=3, book_title='The Great Gatsby', genre='Tragedy')
+        self.user = User.objects.create_user(username='bookrater2@example.com', password='bookratepass456')
+        self.book = Book.objects.create(book_title='1984', genre='Dystopian')
 
-    def test_book_rating_form_valid(self):
-        form_data = {'book_id': self.book.book_id, 'rating': 5, 'comment': 'Really good book, found it an interesting read', 'title': 'The Great Gatsby'}
+    def test_book_rating_form_missing_fields(self):
+        form_data = {'rating': 4}
         form = BookRatingForm(data=form_data)
-        self.assertTrue(form.is_valid())
+        self.assertFalse(form.is_valid())
+
+    def test_book_rating_form_invalid_data(self):
+        form_data = {'book': '1984', 'rating': 'Good', 'comment': 'Thought-provoking'}
+        form = BookRatingForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
 
 # Model tests
-
 class UserModelTest(TestCase):
     def test_user_str(self):
         user = User.objects.create_user(username='testuser@example.com', password='testpass123', first_name='Test', last_name='User')
@@ -69,15 +77,15 @@ class MovieRatingModelTest(TestCase):
     def test_movie_rating_str(self):
         user = User.objects.create_user(username='ratinguser@example.com', password='ratingpass123')
         movie = Movie.objects.create(movie_id=2, title='Jaws', genre='Thriller')
-        movie_rating = Movie_Rating.objects.create(movie_rating_id=8, movie_id=movie, user=user, rating=4, comment='Its a good movie but not for me, i found it too scary to be enjoyable')
-        self.assertEqual(str(movie_rating), '8')
+        movie_rating = Movie_Rating.objects.create(movie_rating_id=8, movie=movie, user=user, rating=4, comment='Its a good movie but not for me, i found it too scary to be enjoyable')
+        self.assertEqual(str(movie_rating.rating), '4')
 
 class BookRatingModelTest(TestCase):
     def test_book_rating_str(self):
         user = User.objects.create_user(username='bookluvr123@email.com', password='ilovebooks456')
         book = Book.objects.create(book_id=4, book_title='Circe', genre='Fantasy')
-        book_rating = Book_Rating.objects.create(book_rating_id=8, book_id=book, user=user, rating=4, comment='Overhyped')
-        self.assertEqual(str(book_rating), '8')
+        book_rating = Book_Rating.objects.create(book_rating_id=8, book=book, user=user, rating=4, comment='Overhyped')
+        self.assertEqual(str(book_rating.rating), '4')
 
 class UserProfileModelTest(TestCase):
     def test_user_profile_str(self):
@@ -105,7 +113,7 @@ class AddRatingViewTest(TestCase):
 
     def test_add_rating_redirect_if_not_logged_in(self):
         response = self.client.get(reverse('rate:add_rating'))
-        self.assertRedirects(response, '/rate/login/?next=/rate/add_rating/')
+        self.assertRedirects(response, '/accounts/login/?next=/rate/add_rating/', fetch_redirect_response=False)
     
     def test_add_rating_logged_in_renders_correct_template(self):
         self.client.login(username='testuser@example.com', password='testpass123')
@@ -121,7 +129,7 @@ class MyMediaViewTest(TestCase):
     
     def test_my_media_redirect_if_not_logged_in(self):
         response = self.client.get(reverse('rate:my_media'))
-        self.assertRedirects(response, '/rate/login/?next=/rate/my_media/')
+        self.assertRedirects(response, '/accounts/login/?next=/rate/my_media/', fetch_redirect_response=False)
 
     def test_my_media_logged_in_renders_correct_template(self):
         self.client.login(username='testuser@example.com', password='testpass123')
