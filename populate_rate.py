@@ -12,7 +12,7 @@ def populate():
     movies=[{'movie_id':1,'title':'Pulp Fiction','genre':'Action', 'image':os.path.join(media_url,'pulp_fiction.jpg')},
             {'movie_id':2,'title': 'Jaws' ,'genre':'Action', 'image':os.path.join(media_url,'jaws.jpg')}]
     books=[{'book_id':1, 'title':'The Great Gatsby', 'genre':'Fantasy', 'image':os.path.join(media_url,'great_gatsby.jpg')},
-           {'book_id':2, 'title':'Circle', 'genre':'Fantasy', 'image':os.path.join(media_url,'circle.jpg')}]
+           {'book_id':2, 'title':'Circe', 'genre':'Fantasy', 'image':os.path.join(media_url,'circe.jpg')}]
     movie_rating=[{'movie_rating_id':1,'movie_id':1,'user':1, 'rating':9, 'comment':'Loved it, found it really intresting'},
                   {'movie_rating_id':2,'movie_id':2,'user':1, 'rating':6, 'comment':'Its a good movie but not for me, i found it too scary to be enjoyable'}]
     book_rating=[{'book_rating_id':1,'book_id':1,'user':2, 'rating':9, 'comment':'Really good book, found it an intresting read'},
@@ -53,7 +53,7 @@ def populate():
     for rating_data in movie_rating:
         Movie_Rating.objects.get_or_create(
             movie_rating_id=rating_data['movie_rating_id'],
-            movie_id=Movie.objects.get(movie_id=rating_data['movie_id']),
+            movie=Movie.objects.get(movie_id=rating_data['movie_id']),
             #user=User.objects.get(user_id=rating_data['user']),
             rating=rating_data['rating'],
             comment=rating_data['comment']
