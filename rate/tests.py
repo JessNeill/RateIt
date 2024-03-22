@@ -30,10 +30,10 @@ class MovieRatingFormTest(TestCase):
     def setUp(self):
         User = get_user_model()
         self.user = User.objects.create_user(username='movierater@example.com', password='movieratepass123')
-        self.movie = Movie.objects.create(movie_id=3, title='Matrix', genre='Sci-Fi')
+        self.movie = Movie.objects.create(movie_id=1, title='Pulp Fiction', genre='Crime')
 
     def test_movie_rating_form_valid(self):
-        form_data = {'movie_id': self.movie.movie_id, 'rating': 5, 'comment': 'Great!', 'title': 'Matrix'}
+        form_data = {'movie_id': self.movie.movie_id, 'rating': 5, 'comment': 'Loved it, found it really interesting', 'title': 'Pulp Fiction'}
         form = MovieRatingForm(data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -41,10 +41,10 @@ class BookRatingFormTest(TestCase):
     def setUp(self):
         User = get_user_model()
         self.user = User.objects.create_user(username='bookrater@example.com', password='bookratepass123')
-        self.book = Book.objects.create(book_id=3, book_title='Brave New World', genre='Dystopian')
+        self.book = Book.objects.create(book_id=3, book_title='The Great Gatsby', genre='Tragedy')
 
     def test_book_rating_form_valid(self):
-        form_data = {'book_id': self.book.book_id, 'rating': 4, 'comment': 'Interesting read.', 'title': 'Brave New World'}
+        form_data = {'book_id': self.book.book_id, 'rating': 5, 'comment': 'Really good book, found it an interesting read', 'title': 'The Great Gatsby'}
         form = BookRatingForm(data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -57,27 +57,27 @@ class UserModelTest(TestCase):
 
 class MovieModelTest(TestCase):
     def test_movie_str(self):
-        movie = Movie.objects.create(movie_id=1, title='Inception', genre='Action')
-        self.assertEqual(str(movie), 'Inception')
+        movie = Movie.objects.create(movie_id=2, title='Jaws', genre='Thriller')
+        self.assertEqual(str(movie), 'Jaws')
 
 class BookModelTest(TestCase):
     def test_book_str(self):
-        book = Book.objects.create(book_id=1, book_title='The Great Gatsby', genre='Fiction')
-        self.assertEqual(str(book), 'The Great Gatsby')
+        book = Book.objects.create(book_id=4, book_title='Circe', genre='Fantasy')
+        self.assertEqual(str(book), 'Circe')
 
 class MovieRatingModelTest(TestCase):
     def test_movie_rating_str(self):
         user = User.objects.create_user(username='ratinguser@example.com', password='ratingpass123')
-        movie = Movie.objects.create(movie_id=2, title='Interstellar', genre='Sci-Fi')
-        movie_rating = Movie_Rating.objects.create(movie_rating_id=1, movie_id=movie, user=user, rating=5, comment='Great film!')
-        self.assertEqual(str(movie_rating), '1')
+        movie = Movie.objects.create(movie_id=2, title='Jaws', genre='Thriller')
+        movie_rating = Movie_Rating.objects.create(movie_rating_id=8, movie_id=movie, user=user, rating=4, comment='Its a good movie but not for me, i found it too scary to be enjoyable')
+        self.assertEqual(str(movie_rating), '8')
 
 class BookRatingModelTest(TestCase):
     def test_book_rating_str(self):
         user = User.objects.create_user(username='bookluvr123@email.com', password='ilovebooks456')
-        book = Book.objects.create(book_id=2, title='1984', genre='Dystopian')
-        book_rating = Book_Rating.objects.create(book_rating_id=1, book_id=book, user=user, rating=4, comment='Decent read')
-        self.assertEqual(str(book_rating), '1')
+        book = Book.objects.create(book_id=4, book_title='Circe', genre='Fantasy')
+        book_rating = Book_Rating.objects.create(book_rating_id=8, book_id=book, user=user, rating=4, comment='Overhyped')
+        self.assertEqual(str(book_rating), '8')
 
 class UserProfileModelTest(TestCase):
     def test_user_profile_str(self):
