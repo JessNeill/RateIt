@@ -1,10 +1,12 @@
+from django.contrib.auth.models import Permission
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from rate.models import Movie, Book, Movie_Rating, Book_Rating, UserProfile
-from rate.forms import UserForm, UserProfileForm, MovieRatingForm, BookRatingForm
+from .models import Movie, Book, Movie_Rating, Book_Rating, UserProfile
+from .forms import UserForm, UserProfileForm, MovieRatingForm, BookRatingForm
 from django.urls import reverse
 from django.test import Client
 
+User = get_user_model()
 
 # Form tests
 class UserFormTest(TestCase):
@@ -47,12 +49,11 @@ class BookRatingFormTest(TestCase):
         self.assertTrue(form.is_valid())
 
 # Model tests
-User = get_user_model()
 
 class UserModelTest(TestCase):
     def test_user_str(self):
         user = User.objects.create_user(username='testuser@example.com', password='testpass123', first_name='Test', last_name='User')
-        self.assertEqual(str(user), 'testuser@exampe.com')
+        self.assertEqual(str(user), 'testuser@example.com')
 
 class MovieModelTest(TestCase):
     def test_movie_str(self):
@@ -76,13 +77,13 @@ class BookRatingModelTest(TestCase):
         user = User.objects.create_user(username='bookluvr123@email.com', password='ilovebooks456')
         book = Book.objects.create(book_id=2, title='1984', genre='Dystopian')
         book_rating = Book_Rating.objects.create(book_rating_id=1, book_id=book, user=user, rating=4, comment='Decent read')
-        self.assertEquals(str(book_rating), '1')
+        self.assertEqual(str(book_rating), '1')
 
 class UserProfileModelTest(TestCase):
     def test_user_profile_str(self):
-        user = User.objects.create_user(username='profileuser@email.com', password='profilepass123')
+        user = User.objects.create_user(username='profileuser@example.com', password='profilepass123')
         user_profile = UserProfile.objects.create(user=user)
-        self.assertEqual(str(user_profile), 'profileuser@email.com')
+        self.assertEqual(str(user_profile), 'profileuser@example.com')
 
 # View tests
 class IndexViewTest(TestCase):
@@ -99,7 +100,7 @@ class GenresViewTest(TestCase):
 
 class AddRatingViewTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser@email.com', password='testpass123')
+        self.user = User.objects.create_user(username='testuser@example.com', password='testpass123')
         self.client = Client()
 
     def test_add_rating_redirect_if_not_logged_in(self):
@@ -107,15 +108,15 @@ class AddRatingViewTest(TestCase):
         self.assertRedirects(response, '/rate/login/?next=/rate/add_rating/')
     
     def test_add_rating_logged_in_renders_correct_template(self):
-        self.client.login(username='testuser@email.com', password='testpass123')
+        self.client.login(username='testuser@example.com', password='testpass123')
         response = self.client.get(reverse('rate:add_rating'))
-        self.assertEqual(str(response.context['user']), 'testuser@email.com')
+        self.assertEqual(str(response.context['user']), 'testuser@example.com')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'rate/add_rating.html')
 
 class MyMediaViewTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser@email.com', password='testpass123')
+        self.user = User.objects.create_user(username='testuser@example.com', password='testpass123')
         self.client = Client()
     
     def test_my_media_redirect_if_not_logged_in(self):
@@ -123,15 +124,15 @@ class MyMediaViewTest(TestCase):
         self.assertRedirects(response, '/rate/login/?next=/rate/my_media/')
 
     def test_my_media_logged_in_renders_correct_template(self):
-        self.client.login(username='testuser@email.com', password='testpass123')
+        self.client.login(username='testuser@example.com', password='testpass123')
         response = self.client.get(reverse('rate:my_media'))
-        self.assertEqual(str(response.context['user']), 'testuser@email.com')
+        self.assertEqual(str(response.context['user']), 'testuser@example.com')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'rate/my_media.html')
 
 class UserLoginLogoutTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser@email.com', password='testpass123')
+        self.user = User.objects.create_user(username='testuser@example.com', password='testpass123')
         self.client = Client()
 
     def test_login_page(self):
@@ -140,12 +141,12 @@ class UserLoginLogoutTest(TestCase):
         self.assertTemplateUsed(response, 'rate/login.html')
     
     def test_login_logout_functionality(self):
-        login = self.client.login(username='testuser@email.com', password='testpass123')
+        login = self.client.login(username='testuser@example.com', password='testpass123')
         self.assertTrue(login)
         response = self.client.get(reverse('rate:logout'))
         self.assertRedirects(response, reverse('rate:index'))
 
-class RegistationViewTest(TestCase):
+class RegistrationViewTest(TestCase):
     def setUp(self):
         self.client = Client()
     
@@ -158,7 +159,7 @@ class RegistationViewTest(TestCase):
         response = self.client.post(reverse('rate:register'), {
         'first_name': 'Test',
         'last_name': 'User',
-        'username': 'testuser@email.com',
+        'username': 'testuser@example.com',
         'password': 'testpass123'
         })
 
