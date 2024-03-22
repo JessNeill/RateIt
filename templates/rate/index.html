@@ -5,13 +5,32 @@
 
 {% block body_block %}
 <!-- Your styles and HTML structure here -->
+<style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .column {
+      float: left;
+      width: 225px;
+      padding: 5px;
+    }
+
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+</style>
+
 <div class="row">
     {% for movie in top_movies %}
         <div class="column">
             <h3>{{ movie.title }}</h3>
             <p>Average Rating: {{ movie.avg_rating }}</p>
             {% if movie.image_url %}
-                <img src="{{ movie.image_url }}" alt="{{ movie.title }} Poster" style="width: 100%; height: auto;">
+                <img src="{{ movie.image_url }}" alt="{{ movie.title }} Poster" style="width: 100%; height: 275;">
             {% else %}
                 <p>No image available.</p>
             {% endif %}
@@ -25,7 +44,7 @@
             <h3>{{ book.title }}</h3>
             <p>Average Rating: {{ book.avg_rating }}</p>
             {% if book.image_url %}
-                <img src="{{ book.image_url }}" alt="{{ book.title }} Cover" style="width: 100%; height: auto;">
+                <img src="{{ book.image_url }}" alt="{{ book.title }} Cover" style="width: 100%; height: 275;">
             {% else %}
                 <p>No image available.</p>
             {% endif %}
