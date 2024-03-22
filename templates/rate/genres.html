@@ -17,7 +17,7 @@
                 <div>
                     <h4>{{ movie.genre }} - {{ movie.title }}</h4>
                     {% if movie.picture %}
-                        <img src="{{ movie.picture.url }}" alt="{{ movie.title }}" />
+                        <img src="{{ movie.picture.url }}" alt="{{ movie.title }}" style="width: 100%; height: 275;"/>
                     {% else %}
                         <p>No image available.</p>
                     {% endif %}
@@ -35,7 +35,7 @@
                 <div>
                     <h4>{{ book.genre }} - {{ book.book_title }}</h4>
                     {% if book.picture %}
-                        <img src="{{ book.picture.url }}" alt="{{ book.book_title }}" />
+                        <img src="{{ book.picture.url }}" alt="{{ book.book_title }}"style="width: 100%; height: 275;" />
                     {% else %}
                         <p>No image available.</p>
                     {% endif %}
