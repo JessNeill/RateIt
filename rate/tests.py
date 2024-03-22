@@ -26,30 +26,38 @@ class UserProfileFormTest(TestCase):
         form = UserProfileForm(data=form_data)
         self.assertTrue(form.is_valid())
 
-class MovieRatingFormTest(TestCase):
+class MovieRatingFormAdditionalTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user(username='movierater@example.com', password='movieratepass123')
-        self.movie = Movie.objects.create(movie_id=1, title='Pulp Fiction', genre='Crime')
+        self.user = User.objects.create_user(username='movierater2@example.com', password='movieratepass456')
+        self.movie = Movie.objects.create(title='Inception', genre='Action')
 
-    def test_movie_rating_form_valid(self):
-        form_data = {'movie': self.movie, 'rating': 5, 'comment': 'Loved it, found it really interesting'}
+    def test_movie_rating_form_missing_fields(self):
+        form_data = {'rating': 5}
         form = MovieRatingForm(data=form_data)
-        self.assertTrue(form.is_valid())
+        self.assertFalse(form.is_valid())
 
-class BookRatingFormTest(TestCase):
+    def test_movie_rating_form_invalid_data(self):
+        form_data = {'movie': 'Inception', 'rating': 'Excellent', 'comment': 'Great movie!'}
+        form = MovieRatingForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+class BookRatingFormAdditionalTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user(username='bookrater@example.com', password='bookratepass123')
-        self.book = Book.objects.create(book_id=3, book_title='The Great Gatsby', genre='Tragedy')
+        self.user = User.objects.create_user(username='bookrater2@example.com', password='bookratepass456')
+        self.book = Book.objects.create(book_title='1984', genre='Dystopian')
 
-    def test_book_rating_form_valid(self):
-        form_data = {'book': self.book, 'rating': 5, 'comment': 'Really good book, found it an interesting read'}
+    def test_book_rating_form_missing_fields(self):
+        form_data = {'rating': 4}
         form = BookRatingForm(data=form_data)
-        self.assertTrue(form.is_valid())
+        self.assertFalse(form.is_valid())
+
+    def test_book_rating_form_invalid_data(self):
+        form_data = {'book': '1984', 'rating': 'Good', 'comment': 'Thought-provoking'}
+        form = BookRatingForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
 
 # Model tests
-
 class UserModelTest(TestCase):
     def test_user_str(self):
         user = User.objects.create_user(username='testuser@example.com', password='testpass123', first_name='Test', last_name='User')
