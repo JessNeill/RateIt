@@ -50,7 +50,8 @@ class Movie(models.Model):
     movie_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length = 100)
     genre = models.CharField(max_length = 50)
-    picture = models.ImageField(upload_to='images', blank = True)
+    picture = models.ImageField(upload_to='images/', blank=True)
+
 
     def __str__(self):
         return self.title
@@ -59,10 +60,10 @@ class Book(models.Model):
     book_id = models.AutoField(primary_key=True)
     book_title = models.CharField(max_length = 100)
     genre = models.CharField(max_length = 50)
-    picture = models.ImageField(upload_to='media/', blank = True)
+    picture = models.ImageField(upload_to='images/', blank=True)
 
     def __str__(self):
-        return self.book_title
+        return str(self.book_title)
     
 class Movie_Rating(models.Model):
     movie_rating_id = models.AutoField(primary_key=True)
@@ -73,7 +74,7 @@ class Movie_Rating(models.Model):
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
-        return str(self.movie_id) #change to .user
+        return str(self.movie) #change to .user
     
 class Book_Rating(models.Model):
     book_rating_id = models.AutoField(primary_key=True)
