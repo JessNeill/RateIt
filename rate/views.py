@@ -1,9 +1,15 @@
+from django.shortcuts import render, redirect 
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from rate.forms import UserForm, UserProfileForm, MovieRatingForm, BookRatingForm
+from rate.models import Movie, Movie_Rating, Book, Book_Rating
 from django.contrib.auth.decorators import login_required
 
 from .forms import UserForm, UserProfileForm
@@ -61,7 +67,7 @@ def index(request):
     return render(request, 'rate/index.html', context=context_dict)
 
 
-def genres(request):
+  def genres(request):
     movies = Movie.objects.all()
     
     genres={'movies':{'Fantasy':[],'Comedy':[],'Romance':[],'Action':[]},
@@ -97,24 +103,42 @@ def genres(request):
     
     print(genres)
     return render(request, 'rate/genres.html', context=genres)
-#genres={
-#   'movies':{
-#       'Tragedy':[
-#           {'movie_id':3,'title':'hi','rating':5},
-#           {'title':bye, 'rating':3}
-#       ],
-#       Fantasy':[],'Romance:{}, 'books':{'Crime':{},'Horror':{}}}
 
+  
 @login_required
 def add_rating(request):
-    return render(request, 'rate/add_rating.html')
+    if request.method == 'POST':
+        form = MovieRatingForm(request.POST, request.FILES) if request.POST.get('media_type') == 'movie' else BookRatingForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            title = form.cleaned_data.get('title')
+            rating_instance = form.save(commit=False)
+            rating_instance.user = request.user
+
+            if request.POST.get('media_type') == 'movie':
+                movie, created = Movie.objects.get_or_create(title=title)
+                rating_instance.movie_id = movie
+            else:
+                book, created = Book.objects.get_or_create(title=title)
+                rating_instance.book_id = book
+
+            rating_instance.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        movie_form = MovieRatingForm()
+        book_form = BookRatingForm()
+        return render(request, 'rate/add_rating.html', {
+            'movie_form': movie_form,
+            'book_form': book_form
+        })
+
 
 @login_required
 def my_media(request):
     context_dict={}
-    print(Book_Rating.objects.all())
     my_br_list = Book_Rating.objects.all().values()
-    
     context_dict['my_books']=my_br_list
  
     for br in my_br_list:
@@ -126,7 +150,7 @@ def my_media(request):
         br['genre']=genre
         br['image']=image
        
-    my_mr_list = Movie_Rating.objects.all().values() ##it might be request.user.user_id but hopefully this is the right code for getting the current user id (request.user.id) the tutor wasnt all that confident
+    my_mr_list = Movie_Rating.objects.all().values() 
     context_dict['my_movies'] = my_mr_list
     
     for mr in my_mr_list:
@@ -178,6 +202,7 @@ def register(request):
 
             registered = True
             return redirect('rate:login')
+            return redirect('rate:login')  
         else:
             print(user_form.errors, profile_form.errors)
     else:

@@ -65,29 +65,26 @@ class Book(models.Model):
         return self.book_title
     
 class Movie_Rating(models.Model):
-    #User = get_user_model()
     movie_rating_id = models.IntegerField(unique = True)
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    #username = models.ForeignKey(Movie, to_field='user_name', on_delete=models.CASCADE)
-    #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    rating = models.IntegerField(max_length = 1)
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
 
-    class Meta:
-        verbose_name_plural = 'Movie Ratings'
-        
     def __str__(self):
         return str(self.movie_id) #change to .user
     
 class Book_Rating(models.Model):
-    #User = get_user_model()
     book_rating_id = models.IntegerField(unique = True)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
-    #user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    rating = models.IntegerField(max_length = 1)
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    rating = models.IntegerField()
     comment = models.CharField(max_length = 300)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Book Ratings'
 
     class Meta:
         verbose_name_plural = 'Book Ratings'

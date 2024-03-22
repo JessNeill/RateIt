@@ -5,11 +5,7 @@
     Homepage
 {% endblock %}
 
-#popular_movies { display: inline-block; }
-
 {% block body_block %}
-<h1>RateIt!</h1>
-<h2>Most Popular Movies</h2>
 
 <style>
     * {
@@ -28,9 +24,12 @@
       clear: both;
       display: table;
     }
-    </style>
+</style>
 
-    <div class="row">
+<div class = "jumbotron p-4">
+    <h1 class="jumbotron-heading">RateIt!</h1>
+<h2>Most Popular Movies</h2>
+ <div class="row">
         {% for movie in movies %}
             <div class="column">
                 <h3>{{movie.title}}</h3>
@@ -58,5 +57,5 @@
         {% endfor %}
            
     </div>
-    
+</div>
 {% endblock %}

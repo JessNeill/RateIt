@@ -25,7 +25,6 @@
     }
 </style>
 <h1>Genres</h1>
-
     {% for genre, movies_list in movies.items %}
     {% if movies_list%}
         <h2>{{genre}} Movies</h2>
@@ -61,3 +60,6 @@
     {% endif %}
     {% endfor %}
 {% endblock %}
+
+{% endblock %}
+
